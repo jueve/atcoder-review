@@ -8,7 +8,6 @@ interface C {
     _arg0: null | React.ChangeEvent<HTMLInputElement>,
     _arg1?: FQItem
   ) => void;
-  deleteFromDatabase: (_arg0: List<FQItem>) => void;
 }
 
 export const Context = createContext<C>({
@@ -17,9 +16,6 @@ export const Context = createContext<C>({
     _arg0: null | React.ChangeEvent<HTMLInputElement>,
     _arg1?: FQItem
   ) => {
-    return;
-  },
-  deleteFromDatabase: (_arg0: List<FQItem>) => {
     return;
   },
 });

@@ -1,10 +1,22 @@
 import React, { useCallback, useEffect, useState, useReducer } from "react";
 import { Context as FreeQueueContext } from "./Context";
 import { ipcRenderer } from "electron";
-import { FreeQueue as FQChannel } from "../../../main-process/database/channel-name";
 import { FQItem, SnackbarAction, SortAction } from "./types";
 import Content from "./Content";
 import { getItems } from "./getItems";
+import {
+  GET_ALL_ITEMS,
+  GET_ALL_ITEMS_SUCCEEDED,
+  GET_ALL_ITEMS_FAILED,
+} from "../../../main-process/database/free-queue/getAllItems";
+import {
+  INSERT_ITEMS_SUCCEEDED,
+  INSERT_ITEMS_FAILED,
+} from "../../../main-process/database/free-queue/insertItems";
+import {
+  DELETE_ITEMS_SUCCEEDED,
+  DELETE_ITEMS_FAILED,
+} from "../../../main-process/database/free-queue/deleteItems";
 
 /**
  * Calculate page length with the length of 'FQItem's and 'itemPerPage'.
@@ -44,9 +56,7 @@ const getItemsToShow = (
 };
 
 export function Entry(): JSX.Element {
-  const [items, setItems] = useState(() =>
-    ipcRenderer.sendSync(FQChannel.GET_ITEMS)
-  );
+  const [items, setItems] = useState(() => ipcRenderer.sendSync(GET_ALL_ITEMS));
   const [page, setPage] = useState(1);
   const [pageLength, setPageLength] = useState(() => getPageLength(items, 5));
   const [toShow, setToShow] = useState([]);
@@ -83,8 +93,8 @@ export function Entry(): JSX.Element {
   useEffect(() => {
     let mounted = true;
 
-    ipcRenderer.send(FQChannel.GET_ITEMS);
-    ipcRenderer.on(FQChannel.GET_ITEMS_SUCCEEDED, (_, fqis) => {
+    ipcRenderer.send(GET_ALL_ITEMS);
+    ipcRenderer.on(GET_ALL_ITEMS_SUCCEEDED, (_, fqis) => {
       if (mounted) {
         setItems(fqis);
         setPageLength(getPageLength(fqis, itemsPerPage));
@@ -92,7 +102,7 @@ export function Entry(): JSX.Element {
       }
     });
 
-    ipcRenderer.on(FQChannel.GET_ITEMS_FAILED, (_, fqis) => {
+    ipcRenderer.on(GET_ALL_ITEMS_FAILED, (_, fqis) => {
       if (mounted) {
         setItems(fqis);
         setPageLength(getPageLength(fqis, itemsPerPage));
@@ -100,7 +110,7 @@ export function Entry(): JSX.Element {
       }
     });
 
-    ipcRenderer.on(FQChannel.INSERT_ITEMS_SUCCEEDED, (_) => {
+    ipcRenderer.on(INSERT_ITEMS_SUCCEEDED, (_) => {
       if (mounted) {
         setNotification({
           status: "success",
@@ -110,7 +120,7 @@ export function Entry(): JSX.Element {
       }
     });
 
-    ipcRenderer.on(FQChannel.INSERT_ITEMS_FAILED, (_) => {
+    ipcRenderer.on(INSERT_ITEMS_FAILED, (_) => {
       if (mounted) {
         setNotification({
           status: "error",
@@ -120,7 +130,7 @@ export function Entry(): JSX.Element {
       }
     });
 
-    ipcRenderer.on(FQChannel.DELETE_ITEMS_SUCCEEDED, (_) => {
+    ipcRenderer.on(DELETE_ITEMS_SUCCEEDED, (_) => {
       if (mounted) {
         setNotification({
           status: "success",
@@ -130,7 +140,7 @@ export function Entry(): JSX.Element {
       }
     });
 
-    ipcRenderer.on(FQChannel.DELETE_ITEMS_FAILED, (_) => {
+    ipcRenderer.on(DELETE_ITEMS_FAILED, (_) => {
       if (mounted) {
         setNotification({
           status: "error",

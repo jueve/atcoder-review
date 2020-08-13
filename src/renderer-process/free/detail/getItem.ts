@@ -1,9 +1,9 @@
 import { FQItem } from "../wrapper/types";
 import { ipcRenderer } from "electron";
-import { FreeQueue as FQChannel } from "../../../main-process/database/channel-name";
+import { GET_SINGLE_ITEM } from "../../../main-process/database/free-queue/getSingleItem";
 
 export const getItem = (id: string): null | FQItem => {
-  const items = ipcRenderer.sendSync(FQChannel.GET_ITEM, id);
+  const items = ipcRenderer.sendSync(GET_SINGLE_ITEM, id);
   if (items === []) {
     return null;
   } else {

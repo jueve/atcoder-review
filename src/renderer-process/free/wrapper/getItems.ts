@@ -1,7 +1,7 @@
 import { ipcRenderer } from "electron";
-import { FreeQueue as FQChannel } from "../../../main-process/database/channel-name";
 import { FQItem } from "../wrapper/types";
+import { GET_ALL_ITEMS } from "../../../main-process/database/free-queue/getAllItems";
 
 export const getItems = (): Array<FQItem> => {
-  return ipcRenderer.sendSync(FQChannel.GET_ITEMS);
+  return ipcRenderer.sendSync(GET_ALL_ITEMS);
 };

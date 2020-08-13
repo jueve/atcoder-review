@@ -17,7 +17,10 @@ import { insertItems } from "./insertItems";
 import { getCandidates } from "./getCandidates";
 import { Context as FreeQueueContext } from "../wrapper/Context";
 import { ipcRenderer } from "electron";
-import { FreeQueue as FQChannel } from "../../../main-process/database/channel-name";
+import {
+  GET_ALL_CANDIDATES_SUCCEEDED,
+  GET_ALL_CANDIDATES_FAILED,
+} from "../../../main-process/database/free-queue/getAllCandidates";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -92,12 +95,12 @@ export function Form(): JSX.Element {
   useEffect(() => {
     let mounted = true;
     getCandidates();
-    ipcRenderer.on(FQChannel.GET_CANDIDATES_SUCCEEDED, (_, fqcs) => {
+    ipcRenderer.on(GET_ALL_CANDIDATES_SUCCEEDED, (_, fqcs) => {
       if (mounted) {
         setClassifiedCandidates(createClassifiedCandidates(fqcs));
       }
     });
-    ipcRenderer.on(FQChannel.GET_CANDIDATES_SUCCEEDED, (_, fqcs) => {
+    ipcRenderer.on(GET_ALL_CANDIDATES_FAILED, (_, fqcs) => {
       if (mounted) {
         setClassifiedCandidates(createClassifiedCandidates(fqcs));
       }

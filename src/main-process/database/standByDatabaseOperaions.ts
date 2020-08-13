@@ -1,9 +1,8 @@
 import { Fetch as FetchChannel } from "./channel-name";
-import { FreeQueue as FreeQueueChannel } from "./channel-name";
 import { DateQueue as DateQueueChannel } from "./channel-name";
 import { Fetch } from "./Fetch";
-import { FreeQueue } from "./FreeQueue";
 import { DateQueue } from "./DateQueue";
+import { ready as readyFreeQueue } from "./free-queue/ready";
 
 const standByDatabaseOperations = () => {
   Fetch.updateUserSubmissions(
@@ -34,71 +33,13 @@ const standByDatabaseOperations = () => {
     FetchChannel.UPDATE_CONTESTS_FAILED
   );
 
-  FreeQueue.getItem(
-    "free_queue",
-    FreeQueueChannel.GET_ITEM,
-    FreeQueueChannel.GET_ITEM_SUCCEEDED,
-    FreeQueueChannel.GET_ITEM_FAILED
-  );
-
-  FreeQueue.getItems(
-    "free_queue",
-    FreeQueueChannel.GET_ITEMS,
-    FreeQueueChannel.GET_ITEMS_SUCCEEDED,
-    FreeQueueChannel.GET_ITEMS_FAILED
-  );
-
-  FreeQueue.getCandidates(
-    "problems",
-    "contests",
-    FreeQueueChannel.GET_CANDIDATES,
-    FreeQueueChannel.GET_CANDIDATES_SUCCEEDED,
-    FreeQueueChannel.GET_CANDIDATES_FAILED
-  );
-
-  FreeQueue.insertItems(
-    "free_queue",
-    FreeQueueChannel.INSERT_ITEMS,
-    FreeQueueChannel.INSERT_ITEMS_SUCCEEDED,
-    FreeQueueChannel.INSERT_ITEMS_FAILED
-  );
-
-  FreeQueue.deleteItems(
-    "free_queue",
-    FreeQueueChannel.DELETE_ITEMS,
-    FreeQueueChannel.DELETE_ITEMS_SUCCEEDED,
-    FreeQueueChannel.DELETE_ITEMS_FAILED
-  );
-
-  FreeQueue.reorderItems(
-    "free_queue",
-    FreeQueueChannel.REORDER_ITEMS,
-    FreeQueueChannel.REORDER_ITEMS_SUCCEEDED,
-    FreeQueueChannel.REORDER_ITEMS_FAILED
-  );
-
-  FreeQueue.changeItemDoneStatus(
-    "free_queue",
-    FreeQueueChannel.UPDATE_ITEM_DONE_STATUS,
-    FreeQueueChannel.UPDATE_ITEM_DONE_STATUS_SUCCEEDED,
-    FreeQueueChannel.UPDATE_ITEM_DONE_STATUS_FAILED
-  );
-
   DateQueue.getDateQueueCandidates(
     DateQueueChannel.GET_CANDIDATES,
     DateQueueChannel.GET_CANDIDATES_SUCCEEDED,
     DateQueueChannel.GET_CANDIDATES_FAILED
   );
 
-  FreeQueue.getProblemDifficulty(
-    "problem_models",
-    FreeQueueChannel.GET_PROBLEM_DIFFICULTY
-  );
-
-  FreeQueue.getProblemExperimentalStatus(
-    "problem_models",
-    FreeQueueChannel.GET_PROBLEM_EXPERIMENTAL_STATUS
-  );
+  readyFreeQueue();
 };
 
 export default standByDatabaseOperations;

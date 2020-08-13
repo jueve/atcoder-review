@@ -7,7 +7,6 @@ import { Context as FreeQueueContext } from "../wrapper/Context";
 import { Context as DeleteContext } from "./Context";
 import { FQCandidate, FQItem } from "../wrapper/types";
 import { ipcRenderer } from "electron";
-import { FreeQueue as FQChannel } from "../../../main-process/database/channel-name";
 import { reducer } from "./reducer";
 import { Form } from "./Form";
 import { ItemList } from "./ItemList";
@@ -26,14 +25,6 @@ const useStyle = makeStyles({
 export function Entry(): JSX.Element {
   const classes = useStyle();
   const [toDelete, dispatchDeleteAction] = useReducer(reducer, List<FQItem>());
-
-  const deleteFromDatabase = useCallback(
-    (toDelete: List<FQItem>) => {
-      ipcRenderer.send(FQChannel.DELETE_ITEMS, toDelete.toArray());
-      dispatchDeleteAction({ type: "CLEAR", item: undefined });
-    },
-    [dispatchDeleteAction]
-  );
 
   const changeToDelete = useCallback(
     (event: null | React.ChangeEvent<HTMLInputElement>, fqi: FQItem) => {
@@ -54,7 +45,6 @@ export function Entry(): JSX.Element {
         value={{
           toDelete: toDelete,
           changeToDelete: changeToDelete,
-          deleteFromDatabase: deleteFromDatabase,
         }}
       >
         <Grid container alignItems="stretch" spacing={4}>

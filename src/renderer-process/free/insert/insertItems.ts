@@ -1,9 +1,11 @@
 import { FQCandidate, FQItem } from "../wrapper/types";
 import { ipcRenderer } from "electron";
-import { FreeQueue as FQChannel } from "../../../main-process/database/channel-name";
 import { v4 } from "uuid";
 import moment from "moment";
 import { List } from "immutable";
+import { GET_DIFFICULTY } from "../../../main-process/database/free-queue/getDifficulty";
+import { GET_EXPERIMENTAL_STATUS } from "../../../main-process/database/free-queue/getExperimentalStatus";
+import { INSERT_ITEMS } from "../../../main-process/database/free-queue/insertItems";
 
 /**
  * Get problem's difficulty with Sync function.
@@ -13,7 +15,7 @@ import { List } from "immutable";
  * @returns {boolean} - Positive integer or zero.
  */
 const getProblemDifficulty = (candidate: FQCandidate): number => {
-  return ipcRenderer.sendSync(FQChannel.GET_PROBLEM_DIFFICULTY, candidate);
+  return ipcRenderer.sendSync(GET_DIFFICULTY, candidate);
 };
 
 /**
@@ -23,10 +25,7 @@ const getProblemDifficulty = (candidate: FQCandidate): number => {
  * @returns {boolean} - Return 'true' if problems status is experimental, otherwise 'false'.
  */
 const getProblemExperimentalStatus = (candidate: FQCandidate): boolean => {
-  return ipcRenderer.sendSync(
-    FQChannel.GET_PROBLEM_EXPERIMENTAL_STATUS,
-    candidate
-  );
+  return ipcRenderer.sendSync(GET_EXPERIMENTAL_STATUS, candidate);
 };
 
 /**
@@ -55,5 +54,5 @@ export const insertItems = (fqcs: List<FQCandidate>): void => {
     .map((c) => createFreeQueueItem(c))
     .toArray()
     .reverse();
-  ipcRenderer.send(FQChannel.INSERT_ITEMS, fqis);
+  ipcRenderer.send(INSERT_ITEMS, fqis);
 };

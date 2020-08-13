@@ -1,8 +1,8 @@
 import { FQItem } from "../wrapper/types";
 import { ipcRenderer } from "electron";
-import { FreeQueue as FQChannel } from "../../../main-process/database/channel-name";
+import { DELETE_ITEMS } from "../../../main-process/database/free-queue/deleteItems";
 import { List } from "immutable";
 
 export const deleteItems = (fqis: List<FQItem>): void => {
-  ipcRenderer.send(FQChannel.DELETE_ITEMS, fqis.toArray());
+  ipcRenderer.send(DELETE_ITEMS, fqis.toArray());
 };

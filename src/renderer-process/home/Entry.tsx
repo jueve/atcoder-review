@@ -99,7 +99,7 @@ function StatusItem(compose: Compose) {
   );
 }
 
-function Home(): JSX.Element {
+export function Entry(): JSX.Element {
   const classes = useStyles();
   const [contests, setContests] = useState<FetchStatus>("STANDS_BY");
   const [problems, setProblems] = useState<FetchStatus>("STANDS_BY");
@@ -290,4 +290,3 @@ function Home(): JSX.Element {
   );
 }
 
-export default Home;

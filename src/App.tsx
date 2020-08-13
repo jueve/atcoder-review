@@ -1,10 +1,10 @@
 import React from "react";
 import { HashRouter as Router, Link, Route, Switch } from "react-router-dom";
-import Home from "./renderer-process/home/Home";
 import { APPLICATION_THEME } from "./theme/theme";
 import { BASE_WIDTH, TOP } from "./theme/layout";
 import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import { Button, Grid } from "@material-ui/core";
+import { Entry as HomeEntry} from "./renderer-process/home/Entry";
 import { Entry as FreeQueueEntry } from "./renderer-process/free/wrapper/Entry";
 import "./root.css";
 
@@ -56,7 +56,7 @@ function App(): JSX.Element {
             </Grid>
             <Grid item xs={9} className={classes.inner}>
               <Switch>
-                <Route exact path="/" component={Home} />
+                <Route exact path="/" component={HomeEntry} />
                 <Route path="/free-queue" component={FreeQueueEntry} />
                 <Route path="/date-queue">
                   <div />

@@ -1,6 +1,6 @@
 import React from "react";
 import { HashRouter as Router, Link, Route, Switch } from "react-router-dom";
-import Home from "./renderer-process/Home";
+import Home from "./renderer-process/home/Home";
 import { APPLICATION_THEME } from "./theme/theme";
 import { BASE_WIDTH, TOP } from "./theme/layout";
 import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
@@ -33,6 +33,11 @@ function App(): JSX.Element {
         <div className={classes.root}>
           <Grid container spacing={0}>
             <Grid item xs={3} className={classes.menu}>
+              <div>
+                <Button size="large" component={Link} to={`/`}>
+                  HOME
+                </Button>
+              </div>
               <div>
                 <Button size="large" component={Link} to={`/free-queue`}>
                   Free Queue

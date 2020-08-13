@@ -1,6 +1,0 @@
-export namespace DateQueue {
-  // date queue
-  export const GET_CANDIDATES = "GET_DATE_QUEUE_CANDIDATES";
-  export const GET_CANDIDATES_SUCCEEDED = "GET_DATE_QUEUE_CANDIDATES_SUCCEEDED";
-  export const GET_CANDIDATES_FAILED = "GET_DATE_QUEUE_CANDIDATES_FAILED";
-}

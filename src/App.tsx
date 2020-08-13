@@ -7,8 +7,6 @@ import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import { Button, Grid } from "@material-ui/core";
 import { Entry as FreeQueueEntry } from "./renderer-process/free/wrapper/Entry";
 import "./root.css";
-import { ipcRenderer } from "electron";
-import { Fetch as FetchChannel } from "./main-process/database/channel-name";
 
 const useStyles = makeStyles({
   root: {
@@ -29,9 +27,6 @@ const useStyles = makeStyles({
 
 function App(): JSX.Element {
   const classes = useStyles();
-  //ipcRenderer.send(FetchChannel.UPDATE_PROBLEM_MODELS);
-  //ipcRenderer.send(FetchChannel.UPDATE_PROBLEMS);
-  //ipcRenderer.send(FetchChannel.UPDATE_CONTESTS);
   return (
     <ThemeProvider theme={APPLICATION_THEME}>
       <Router>

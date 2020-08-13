@@ -66,6 +66,7 @@ export const updateUserSubmissions = (
             const schema: Array<RawUserSubmission> = JSON.parse(
               data.toString()
             );
+            const rows = Array<UserSubmission>(0);
 
             schema.sort((a: RawUserSubmission, b: RawUserSubmission) => {
               return b.id - a.id;
@@ -80,16 +81,18 @@ export const updateUserSubmissions = (
                 isUnder(raw.epoch_second, 365) &&
                 !insertedProblem.has(raw.problem_id)
               ) {
-                database(userSubmission)
-                  .insert(createUserSubmissionRecord(raw))
-                  .then((res) => res)
-                  .catch((_res) => event.reply(failed));
-
+                rows.push(createUserSubmissionRecord(raw));
                 insertedProblem = insertedProblem.add(raw.problem_id);
               }
             });
 
-            event.reply(succeeded);
+            const l = rows.length;
+            rows.forEach((r) => {
+              database(userSubmission)
+                .insert(r)
+                .then((res: Array<number>) => event.reply(succeeded, res[0], l))
+                .catch((_res) => event.reply(failed));
+            });
           });
       });
 

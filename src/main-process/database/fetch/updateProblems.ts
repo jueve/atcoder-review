@@ -47,6 +47,7 @@ export const updateProblems = (
           .on("end", () => {
             const data: Buffer = Buffer.concat(chunks);
             const schema = JSON.parse(data.toString());
+            const l: number = schema.length;
 
             database(problems)
               .delete()
@@ -55,11 +56,9 @@ export const updateProblems = (
             schema.forEach((raw: RawProblem) => {
               database(problems)
                 .insert(createProblemRecord(raw))
-                .then((res) => event.reply(succeeded, res))
+                .then((res: Array<number>) => event.reply(succeeded, res[0], l))
                 .catch((_res) => event.reply(failed));
             });
-
-            event.reply(succeeded);
           });
       });
 

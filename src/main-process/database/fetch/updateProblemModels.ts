@@ -92,7 +92,9 @@ export const updateProblemModels = (
               database(problemModels)
                 .insert(createProblemModelRecord(key, value))
                 .then((res: Array<number>) => {
-                  event.reply(succeeded, res[0], l);
+                  if (res[0] >= l) {
+                    event.reply(succeeded, res[0], l);
+                  }
                 })
                 .catch((_res) => event.reply(failed));
             }

@@ -90,7 +90,11 @@ export const updateUserSubmissions = (
             rows.forEach((r) => {
               database(userSubmission)
                 .insert(r)
-                .then((res: Array<number>) => event.reply(succeeded, res[0], l))
+                .then((res: Array<number>) => {
+                  if(res[0] >= l ){
+                    event.reply(succeeded, res[0], l)
+                  }
+                })
                 .catch((_res) => event.reply(failed));
             });
           });

@@ -1,15 +1,13 @@
-export type FetchStatus = "STANDS_BY" | "UPDATING" | "SUCCEEDED" | "FAILED";
-type FetchNotificationStatus = "error" | "warning" | "info" | "success";
+export type Status = "STANDS_BY" | "UPDATING" | "SUCCEEDED" | "FAILED";
+type NotificationStatus = "error" | "warning" | "info" | "success";
 
-export interface Compose {
-  label: string;
-  last_update: string;
-  progress: FetchStatus;
-  onClick: () => void;
+export interface FetchStatus {
+  lastUpdate: string;
+  progress: Status;
 }
 
-export interface FetchNotification {
+export interface Notification {
   open: boolean;
-  status: FetchNotificationStatus;
+  status: NotificationStatus;
   message: string;
 }

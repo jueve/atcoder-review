@@ -58,7 +58,7 @@ export const updateProblems = (
                 .insert(createProblemRecord(raw))
                 .then((res: Array<number>) => {
                   if (res[0] >= l) {
-                    event.reply(succeeded, res[0], l)
+                    event.reply(succeeded, res[0], l);
                   }
                 })
                 .catch((_res) => event.reply(failed));

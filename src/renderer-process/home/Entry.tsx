@@ -2,14 +2,8 @@ import React, { useState, useCallback, useEffect, useMemo } from "react";
 import { ipcRenderer } from "electron";
 import {
   Button,
-  CircularProgress,
-  LinearProgress,
   Grid,
   Typography,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   makeStyles,
   createStyles,
   Theme,
@@ -23,7 +17,6 @@ import {
   UPDATE_PROBLEM_MODELS,
   UPDATE_PROBLEM_MODELS_SUCCEEDED,
   UPDATE_PROBLEM_MODELS_FAILED,
-  updateProblemModels,
 } from "../../main-process/database/fetch/updateProblemModels";
 import {
   UPDATE_CONTESTS,
@@ -35,9 +28,10 @@ import {
   UPDATE_USER_SUBMISSIONS_SUCCEEDED,
   UPDATE_USER_SUBMISSIONS_FAILED,
 } from "../../main-process/database/fetch/updateUserSubmission";
-import { FetchStatus, Compose } from "./types";
-import { Help, Done, Report } from "@material-ui/icons";
+import { FetchStatus, Notification } from "./types";
 import { BASE_WIDTH } from "../../theme/layout";
+import { Context as HomeContext } from "./Context";
+import { UpdateList } from "./UpdateList";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,147 +60,126 @@ const useStyles = makeStyles((theme: Theme) =>
 const text =
   "Get contests, problems and submissions information using API of AtCoder Problems, then store them in local database.";
 
-function StatusItem(compose: Compose) {
-  return (
-    <ListItem>
-      <ListItemText
-        primary={compose.label}
-        secondary={`Last updated: ${compose.last_update}`}
-      />
-      {(() => {
-        switch (compose.progress) {
-          case "UPDATING":
-            return (
-              <Typography
-                variant="body2"
-                color="textSecondary"
-              >Updating...</Typography>
-            );
-
-          default:
-            return (
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={compose.onClick}
-              >
-                UPDATE
-              </Button>
-            );
-        }
-      })()}
-    </ListItem>
-  );
-}
-
 export function Entry(): JSX.Element {
   const classes = useStyles();
-  const [contests, setContests] = useState<FetchStatus>("STANDS_BY");
-  const [problems, setProblems] = useState<FetchStatus>("STANDS_BY");
-  const [problemModels, setProblemModels] = useState<FetchStatus>("STANDS_BY");
-  const [userSubmissions, setUserSubmissions] = useState<FetchStatus>(
-    "STANDS_BY"
-  );
+  const [contests, setContests] = useState<FetchStatus>({
+    lastUpdate: "",
+    progress: "STANDS_BY",
+  });
+  const [problems, setProblems] = useState<FetchStatus>({
+    lastUpdate: "",
+    progress: "STANDS_BY",
+  });
+  const [problemModels, setProblemModels] = useState<FetchStatus>({
+    lastUpdate: "",
+    progress: "STANDS_BY",
+  });
+  const [userSubmissions, setUserSubmissions] = useState<FetchStatus>({
+    lastUpdate: "",
+    progress: "STANDS_BY",
+  });
+  const [notification, setNotification] = useState<Notification>({
+    open: false,
+    status: "success",
+    message: "",
+  });
 
-  const updateContestsInDatabase = useCallback(() => {
-    setContests("UPDATING");
+  const updateContests = useCallback(() => {
+    setContests({ ...contests, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_CONTESTS);
-  }, [setContests]);
+  }, [setContests, contests]);
 
-  const updateProblemsInDatabase = useCallback(() => {
-    setProblems("UPDATING");
+  const updateProblems = useCallback(() => {
+    setProblems({ ...problems, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_PROBLEMS);
-  }, [setProblems]);
+  }, [problems, setProblems]);
 
-  const updateProblemModelsInDatabase = useCallback(() => {
-    setProblemModels("UPDATING");
+  const updateProblemModels = useCallback(() => {
+    setProblemModels({ ...problemModels, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_PROBLEM_MODELS);
-  }, [setProblemModels]);
+  }, [setProblemModels, problemModels]);
 
-  const updateUserSubmissionsInDatabase = useCallback(() => {
-    setUserSubmissions("UPDATING");
+  const updateUserSubmissions = useCallback(() => {
+    setUserSubmissions({ ...userSubmissions, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_USER_SUBMISSIONS);
-  }, [setUserSubmissions]);
+  }, [setUserSubmissions, userSubmissions]);
 
   const updateAll = useCallback(() => {
-    setContests("UPDATING");
-    setProblems("UPDATING");
-    setProblemModels("UPDATING");
-    setUserSubmissions("UPDATING");
+    setContests({ ...contests, progress: "UPDATING" });
+    setProblems({ ...problems, progress: "UPDATING" });
+    setProblemModels({ ...problemModels, progress: "UPDATING" });
+    setUserSubmissions({ ...userSubmissions, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_CONTESTS);
     ipcRenderer.send(UPDATE_PROBLEM_MODELS);
     ipcRenderer.send(UPDATE_PROBLEMS);
     ipcRenderer.send(UPDATE_USER_SUBMISSIONS);
-  }, [setContests, setProblems, setProblemModels, setUserSubmissions]);
+  }, [
+    contests,
+    problems,
+    problemModels,
+    userSubmissions,
+    setContests,
+    setProblems,
+    setProblemModels,
+    setUserSubmissions,
+  ]);
 
   const anyButtonPressed = useMemo(() => {
     return (
-      contests === "UPDATING" ||
-      problems === "UPDATING" ||
-      problemModels === "UPDATING" ||
-      userSubmissions === "UPDATING"
+      contests.progress === "UPDATING" ||
+      problems.progress === "UPDATING" ||
+      problemModels.progress === "UPDATING" ||
+      userSubmissions.progress === "UPDATING"
     );
   }, [contests, problems, problemModels, userSubmissions]);
 
   useEffect(() => {
     let mounted = true;
-    ipcRenderer.on(
-      UPDATE_CONTESTS_SUCCEEDED,
-      (_event, current: number, total: number) => {
-        if (mounted && current === total) {
-          setContests("SUCCEEDED");
-        }
+    ipcRenderer.on(UPDATE_CONTESTS_SUCCEEDED, (_event) => {
+      if (mounted) {
+        setContests({ ...contests, progress: "SUCCEEDED" });
       }
-    );
+    });
 
     ipcRenderer.on(UPDATE_CONTESTS_FAILED, (_event) => {
       if (mounted) {
-        setContests("FAILED");
+        setContests({ ...contests, progress: "FAILED" });
       }
     });
 
-    ipcRenderer.on(
-      UPDATE_PROBLEMS_SUCCEEDED,
-      (_event, current: number, total: number) => {
-        if (mounted && current === total) {
-          setProblems("SUCCEEDED");
-        }
+    ipcRenderer.on(UPDATE_PROBLEMS_SUCCEEDED, (_event) => {
+      if (mounted) {
+        setProblems({ ...problems, progress: "SUCCEEDED" });
       }
-    );
+    });
 
     ipcRenderer.on(UPDATE_PROBLEMS_FAILED, (_event) => {
       if (mounted) {
-        setProblems("FAILED");
+        setProblems({ ...problems, progress: "FAILED" });
       }
     });
 
-    ipcRenderer.on(
-      UPDATE_PROBLEM_MODELS_SUCCEEDED,
-      (_event, current: number, total: number) => {
-        if (mounted && current === total) {
-          setProblemModels("SUCCEEDED");
-        }
+    ipcRenderer.on(UPDATE_PROBLEM_MODELS_SUCCEEDED, (_event) => {
+      if (mounted) {
+        setProblemModels({ ...problemModels, progress: "SUCCEEDED" });
       }
-    );
+    });
 
     ipcRenderer.on(UPDATE_PROBLEM_MODELS_FAILED, (_event) => {
       if (mounted) {
-        setProblemModels("FAILED");
+        setProblemModels({ ...problemModels, progress: "FAILED" });
       }
     });
 
-    ipcRenderer.on(
-      UPDATE_USER_SUBMISSIONS_SUCCEEDED,
-      (_event, current: number, total: number) => {
-        if (mounted && current === total) {
-          setUserSubmissions("SUCCEEDED");
-        }
+    ipcRenderer.on(UPDATE_USER_SUBMISSIONS_SUCCEEDED, (_event) => {
+      if (mounted) {
+        setUserSubmissions({ ...userSubmissions, progress: "SUCCEEDED" });
       }
-    );
+    });
 
     ipcRenderer.on(UPDATE_USER_SUBMISSIONS_FAILED, (_event) => {
       if (mounted) {
-        setUserSubmissions("FAILED");
+        setUserSubmissions({ ...userSubmissions, progress: "FAILED" });
       }
     });
 
@@ -216,77 +189,57 @@ export function Entry(): JSX.Element {
   }, [contests, problems, problemModels, userSubmissions]);
 
   return (
-    <div className={classes.root}>
-      <div>
-        <Typography variant="h3" gutterBottom>
-          AtCoder Review
-        </Typography>
-      </div>
-      <div className={classes.description}>
-        <Typography variant="h6" gutterBottom>
-          Update information?
-        </Typography>
-        <Typography variant="body2" color="textSecondary">
-          {text}
-        </Typography>
-      </div>
+    <HomeContext.Provider
+      value={{
+        contests: contests,
+        problems: problems,
+        problemModels: problemModels,
+        userSubmissions: userSubmissions,
+        updateContests: updateContests,
+        updateProblems: updateProblems,
+        updateProblemModels: updateProblemModels,
+        updateUserSubmissions: updateUserSubmissions,
+        notification: notification,
+      }}
+    >
+      <div className={classes.root}>
+        <div>
+          <Typography variant="h3" gutterBottom>
+            AtCoder Review
+          </Typography>
+        </div>
+        <div className={classes.description}>
+          <Typography variant="h6" gutterBottom>
+            Update information?
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            {text}
+          </Typography>
+        </div>
 
-      <div className={classes.content}></div>
+        <div className={classes.content}></div>
 
-      <div className={classes.content}>
-        <List>
-          <StatusItem
-            {...{
-              label: "Contests",
-              last_update: "???",
-              progress: contests,
-              onClick: updateContestsInDatabase,
-            }}
-          />
-          <StatusItem
-            {...{
-              label: "Problems",
-              last_update: "???",
-              progress: problems,
-              onClick: updateProblemsInDatabase,
-            }}
-          />
-          <StatusItem
-            {...{
-              label: "Problem Models",
-              last_update: "???",
-              progress: problemModels,
-              onClick: updateProblemModelsInDatabase,
-            }}
-          />
-          <StatusItem
-            {...{
-              label: "User Submissions",
-              last_update: "???",
-              progress: userSubmissions,
-              onClick: updateUserSubmissionsInDatabase,
-            }}
-          />
-        </List>
-      </div>
+        <div className={classes.content}>
+          <UpdateList />
+        </div>
 
-      <div className={classes.actions}>
-        <Grid container justify="space-between">
-          <Grid item xs={1} />
-          <Grid item xs={3}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={updateAll}
-              disabled={anyButtonPressed}
-              className={classes.button}
-            >
-              UPDATE ALL
-            </Button>
+        <div className={classes.actions}>
+          <Grid container justify="space-between">
+            <Grid item xs={1} />
+            <Grid item xs={3}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={updateAll}
+                disabled={anyButtonPressed}
+                className={classes.button}
+              >
+                UPDATE ALL
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
+        </div>
       </div>
-    </div>
+    </HomeContext.Provider>
   );
 }
-

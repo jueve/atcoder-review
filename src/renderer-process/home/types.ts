@@ -1,13 +1,13 @@
-export type Status = "STANDS_BY" | "UPDATING" | "SUCCEEDED" | "FAILED";
-type NotificationStatus = "error" | "warning" | "info" | "success";
+export type Fetch = "STANDS_BY" | "UPDATING" | "SUCCEEDED" | "FAILED";
+type Notification = "error" | "warning" | "info" | "success";
 
 export interface FetchStatus {
   lastUpdate: string;
-  progress: Status;
+  progress: Fetch;
 }
 
-export interface Notification {
+export interface NotificationStatus {
   open: boolean;
-  status: NotificationStatus;
+  status: Notification;
   message: string;
 }

@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import { FetchStatus, Notification } from "./types";
+import { FetchStatus, NotificationStatus } from "./types";
 
 interface C {
   contests: FetchStatus;
@@ -10,7 +10,8 @@ interface C {
   updateProblems: () => void;
   updateProblemModels: () => void;
   updateUserSubmissions: () => void;
-  notification: Notification;
+  notification: NotificationStatus;
+  closeNotification: () => void;
 }
 
 const init: FetchStatus = {
@@ -39,5 +40,8 @@ export const Context = createContext<C>({
     open: false,
     status: "success",
     message: "",
+  },
+  closeNotification: () => {
+    return;
   },
 });

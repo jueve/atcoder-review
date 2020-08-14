@@ -28,10 +28,11 @@ import {
   UPDATE_USER_SUBMISSIONS_SUCCEEDED,
   UPDATE_USER_SUBMISSIONS_FAILED,
 } from "../../main-process/database/fetch/updateUserSubmission";
-import { FetchStatus, Notification } from "./types";
+import { FetchStatus, NotificationStatus } from "./types";
 import { BASE_WIDTH } from "../../theme/layout";
 import { Context as HomeContext } from "./Context";
 import { UpdateList } from "./UpdateList";
+import { Notification } from "./Notification";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,7 +79,7 @@ export function Entry(): JSX.Element {
     lastUpdate: "",
     progress: "STANDS_BY",
   });
-  const [notification, setNotification] = useState<Notification>({
+  const [notification, setNotification] = useState<NotificationStatus>({
     open: false,
     status: "success",
     message: "",
@@ -133,53 +134,97 @@ export function Entry(): JSX.Element {
     );
   }, [contests, problems, problemModels, userSubmissions]);
 
+  const closetNotification = useCallback(() => {
+    setNotification({ ...notification, open: false });
+  }, [setNotification, notification]);
+
   useEffect(() => {
     let mounted = true;
     ipcRenderer.on(UPDATE_CONTESTS_SUCCEEDED, (_event) => {
       if (mounted) {
         setContests({ ...contests, progress: "SUCCEEDED" });
+        setNotification({
+          open: true,
+          status: "success",
+          message: "Succeeded to update contests.",
+        });
       }
     });
 
     ipcRenderer.on(UPDATE_CONTESTS_FAILED, (_event) => {
       if (mounted) {
         setContests({ ...contests, progress: "FAILED" });
+        setNotification({
+          open: true,
+          status: "error",
+          message: "Failed to update contests.",
+        });
       }
     });
 
     ipcRenderer.on(UPDATE_PROBLEMS_SUCCEEDED, (_event) => {
       if (mounted) {
         setProblems({ ...problems, progress: "SUCCEEDED" });
+        setNotification({
+          open: true,
+          status: "success",
+          message: "Succeeded to update problems.",
+        });
       }
     });
 
     ipcRenderer.on(UPDATE_PROBLEMS_FAILED, (_event) => {
       if (mounted) {
         setProblems({ ...problems, progress: "FAILED" });
+        setNotification({
+          open: true,
+          status: "error",
+          message: "Failed to update problems.",
+        });
       }
     });
 
     ipcRenderer.on(UPDATE_PROBLEM_MODELS_SUCCEEDED, (_event) => {
       if (mounted) {
         setProblemModels({ ...problemModels, progress: "SUCCEEDED" });
+        setNotification({
+          open: true,
+          status: "success",
+          message: "Succeeded to update problem models.",
+        });
       }
     });
 
     ipcRenderer.on(UPDATE_PROBLEM_MODELS_FAILED, (_event) => {
       if (mounted) {
         setProblemModels({ ...problemModels, progress: "FAILED" });
+        setNotification({
+          open: true,
+          status: "error",
+          message: "Failed to update problem models.",
+        });
       }
     });
 
     ipcRenderer.on(UPDATE_USER_SUBMISSIONS_SUCCEEDED, (_event) => {
       if (mounted) {
         setUserSubmissions({ ...userSubmissions, progress: "SUCCEEDED" });
+        setNotification({
+          open: true,
+          status: "success",
+          message: "Succeeded to update user submission.",
+        });
       }
     });
 
     ipcRenderer.on(UPDATE_USER_SUBMISSIONS_FAILED, (_event) => {
       if (mounted) {
         setUserSubmissions({ ...userSubmissions, progress: "FAILED" });
+        setNotification({
+          open: true,
+          status: "error",
+          message: "Failed to update user submission.",
+        });
       }
     });
 
@@ -200,9 +245,11 @@ export function Entry(): JSX.Element {
         updateProblemModels: updateProblemModels,
         updateUserSubmissions: updateUserSubmissions,
         notification: notification,
+        closeNotification: closetNotification,
       }}
     >
       <div className={classes.root}>
+        <Notification />
         <div>
           <Typography variant="h3" gutterBottom>
             AtCoder Review

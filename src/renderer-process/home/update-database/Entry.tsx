@@ -1,10 +1,5 @@
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-  Typography,
-} from "@material-ui/core";
-import React, { useCallback, useEffect, useState } from "react";
+import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
+import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { FetchStatus, NotificationStatus } from "./types";
 import { ipcRenderer } from "electron";
 import {
@@ -30,8 +25,19 @@ import {
 import { Context as UpdateDatabaseContext } from "./Context";
 import { UpdateList } from "./UpdateList";
 import { Actions } from "./Actions";
+import { Notification } from "./Notification";
 import { BASE_WIDTH } from "../../../theme/layout";
-import Notification from "./Notification";
+import {
+  GET_LOG_SUCCEEDED,
+  GET_LOG_FAILED,
+} from "../../../main-process/log/update-database/getLog";
+import {
+  UPDATE_LOG,
+  UPDATE_LOG_SUCCEEDED,
+  UPDATE_LOG_FAILED,
+} from "../../../main-process/log/update-database/updateLog";
+import { UpdateDatabaseLog } from "../../../main-process/log/types";
+import moment from "moment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,22 +55,24 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const getCurrentEpochSecond = (): number => moment().unix();
+
 export function Entry(): JSX.Element {
   const classes = useStyles();
   const [contests, setContests] = useState<FetchStatus>({
-    lastUpdate: "",
+    lastUpdate: 0,
     progress: "STANDS_BY",
   });
   const [problems, setProblems] = useState<FetchStatus>({
-    lastUpdate: "",
+    lastUpdate: 0,
     progress: "STANDS_BY",
   });
   const [problemModels, setProblemModels] = useState<FetchStatus>({
-    lastUpdate: "",
+    lastUpdate: 0,
     progress: "STANDS_BY",
   });
   const [userSubmissions, setUserSubmissions] = useState<FetchStatus>({
-    lastUpdate: "",
+    lastUpdate: 0,
     progress: "STANDS_BY",
   });
   const [notification, setNotification] = useState<NotificationStatus>({
@@ -138,15 +146,53 @@ export function Entry(): JSX.Element {
     setUserSubmissions,
   ]);
 
+  const getLastUpdate = useMemo(() => {
+    return {
+      contests: contests.lastUpdate,
+      problems: problems.lastUpdate,
+      problemModels: problemModels.lastUpdate,
+      userSubmissions: userSubmissions.lastUpdate,
+    };
+  }, [contests, problems, problemModels, userSubmissions]);
+
   const closetNotification = useCallback(() => {
     setNotification({ ...notification, open: false });
   }, [setNotification, notification]);
 
   useEffect(() => {
     let mounted = true;
+    ipcRenderer.on(GET_LOG_SUCCEEDED, (_event, fetchLog: UpdateDatabaseLog) => {
+      if (mounted) {
+        setContests({ ...contests, lastUpdate: fetchLog.contests });
+        setProblems({ ...problems, lastUpdate: fetchLog.problems });
+        setProblemModels({ ...problemModels, lastUpdate: fetchLog.problems });
+        setUserSubmissions({
+          ...userSubmissions,
+          lastUpdate: fetchLog.userSubmissions,
+        });
+      }
+    });
+
+    ipcRenderer.on(GET_LOG_FAILED, (_event, fetchLog: UpdateDatabaseLog) => {
+      if (mounted) {
+        setContests({ ...contests, lastUpdate: fetchLog.contests });
+        setProblems({ ...problems, lastUpdate: fetchLog.problems });
+        setProblemModels({ ...problemModels, lastUpdate: fetchLog.problems });
+        setUserSubmissions({
+          ...userSubmissions,
+          lastUpdate: fetchLog.userSubmissions,
+        });
+      }
+    });
+
     ipcRenderer.on(UPDATE_CONTESTS_SUCCEEDED, (_event) => {
       if (mounted) {
-        setContests({ ...contests, progress: "SUCCEEDED" });
+        const current = getCurrentEpochSecond();
+        ipcRenderer.send(UPDATE_LOG, {
+          ...getLastUpdate,
+          contests: current,
+        });
+        setContests({ lastUpdate: current, progress: "SUCCEEDED" });
         setNotification({
           open: true,
           status: "success",
@@ -168,7 +214,12 @@ export function Entry(): JSX.Element {
 
     ipcRenderer.on(UPDATE_PROBLEMS_SUCCEEDED, (_event) => {
       if (mounted) {
-        setProblems({ ...problems, progress: "SUCCEEDED" });
+        const current = getCurrentEpochSecond();
+        ipcRenderer.send(UPDATE_LOG, {
+          ...getLastUpdate,
+          problems: current,
+        });
+        setProblems({ lastUpdate: current, progress: "SUCCEEDED" });
         setNotification({
           open: true,
           status: "success",
@@ -190,7 +241,12 @@ export function Entry(): JSX.Element {
 
     ipcRenderer.on(UPDATE_PROBLEM_MODELS_SUCCEEDED, (_event) => {
       if (mounted) {
-        setProblemModels({ ...problemModels, progress: "SUCCEEDED" });
+        const current = getCurrentEpochSecond();
+        ipcRenderer.send(UPDATE_LOG, {
+          ...getLastUpdate,
+          problemModels: current,
+        });
+        setProblemModels({ lastUpdate: current, progress: "SUCCEEDED" });
         setNotification({
           open: true,
           status: "success",
@@ -212,7 +268,12 @@ export function Entry(): JSX.Element {
 
     ipcRenderer.on(UPDATE_USER_SUBMISSIONS_SUCCEEDED, (_event) => {
       if (mounted) {
-        setUserSubmissions({ ...userSubmissions, progress: "SUCCEEDED" });
+        const current = getCurrentEpochSecond();
+        ipcRenderer.send(UPDATE_LOG, {
+          ...getLastUpdate,
+          userSubmissions: current,
+        });
+        setUserSubmissions({ lastUpdate: current, progress: "SUCCEEDED" });
         setNotification({
           open: true,
           status: "success",
@@ -235,7 +296,7 @@ export function Entry(): JSX.Element {
     return () => {
       mounted = false;
     };
-  }, [contests, problems, problemModels, userSubmissions]);
+  }, [contests, problems, problemModels, userSubmissions, getLastUpdate]);
 
   return (
     <UpdateDatabaseContext.Provider

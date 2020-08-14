@@ -2,7 +2,7 @@ export type Fetch = "STANDS_BY" | "UPDATING" | "SUCCEEDED" | "FAILED";
 type Notification = "error" | "warning" | "info" | "success";
 
 export interface FetchStatus {
-  lastUpdate: string;
+  lastUpdate: number;
   progress: Fetch;
 }
 

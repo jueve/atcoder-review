@@ -16,7 +16,7 @@ interface C {
 }
 
 const init: FetchStatus = {
-  lastUpdate: "",
+  lastUpdate: 0,
   progress: "STANDS_BY",
 };
 

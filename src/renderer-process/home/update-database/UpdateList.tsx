@@ -11,6 +11,7 @@ import {
 import { Done, Report, Update } from "@material-ui/icons";
 import { Context as UpdateDatabaseContext } from "./Context";
 import { FetchStatus } from "./types";
+import moment from "moment";
 
 const Icon = (status: FetchStatus): JSX.Element => {
   switch (status.progress) {
@@ -53,6 +54,18 @@ export function UpdateList(): JSX.Element {
     updateProblemModels,
   } = useContext(UpdateDatabaseContext);
 
+  const showLocalTime = (updateEpochSecond: number): string => {
+    if (updateEpochSecond === Number.MIN_SAFE_INTEGER) {
+      return "?";
+    } else {
+      return (
+        moment(updateEpochSecond * 1000)
+          .local()
+          .format("YYYY-MM-DD HH:mm")
+      );
+    }
+  };
+
   return (
     <List>
       <ListItem>
@@ -61,7 +74,7 @@ export function UpdateList(): JSX.Element {
         </ListItemIcon>
         <ListItemText
           primary="Contests (e.g. title, start date)"
-          secondary={`Last updated: ${contests.lastUpdate}`}
+          secondary={`Last updated: ${showLocalTime(contests.lastUpdate)}`}
         />
         <Button
           variant="outlined"
@@ -79,7 +92,7 @@ export function UpdateList(): JSX.Element {
         </ListItemIcon>
         <ListItemText
           primary="Problems (e.g. title, contest id)"
-          secondary={`Last updated: ${problems.lastUpdate}`}
+          secondary={`Last updated: ${showLocalTime(problems.lastUpdate)}`}
         />
         <Button
           variant="outlined"
@@ -97,7 +110,7 @@ export function UpdateList(): JSX.Element {
         </ListItemIcon>
         <ListItemText
           primary="Problem Models (e.g. difficulty)"
-          secondary={`Last updated: ${problemModels.lastUpdate}`}
+          secondary={`Last updated: ${showLocalTime(problemModels.lastUpdate)}`}
         />
         <Button
           variant="outlined"
@@ -115,7 +128,9 @@ export function UpdateList(): JSX.Element {
         </ListItemIcon>
         <ListItemText
           primary="User Submissions (e.g. submission date, problem id)"
-          secondary={`Last updated: ${userSubmissions.lastUpdate}`}
+          secondary={`Last updated: ${showLocalTime(
+            userSubmissions.lastUpdate
+          )}`}
         />
         <Button
           variant="outlined"

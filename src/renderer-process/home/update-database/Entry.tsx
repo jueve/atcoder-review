@@ -1,12 +1,10 @@
 import {
-  Button,
   createStyles,
-  Grid,
   makeStyles,
   Theme,
   Typography,
 } from "@material-ui/core";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FetchStatus, NotificationStatus } from "./types";
 import { ipcRenderer } from "electron";
 import {
@@ -31,11 +29,14 @@ import {
 } from "../../../main-process/database/fetch/updateUserSubmission";
 import { Context as UpdateDatabaseContext } from "./Context";
 import { UpdateList } from "./UpdateList";
+import { Actions } from "./Actions";
+import { BASE_WIDTH } from "../../../theme/layout";
+import Notification from "./Notification";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    description: {
-      margin: theme.spacing(4, 0, 0, 0),
+    root: {
+      width: BASE_WIDTH * 8,
     },
 
     content: {
@@ -44,10 +45,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
     actions: {
       margin: theme.spacing(2, 0, 0, 0),
-    },
-
-    button: {
-      width: theme.spacing(14.2),
     },
   })
 );
@@ -115,15 +112,6 @@ export function Entry(): JSX.Element {
     setProblemModels,
     setUserSubmissions,
   ]);
-
-  const anyButtonPressed = useMemo(() => {
-    return (
-      contests.progress === "UPDATING" ||
-      problems.progress === "UPDATING" ||
-      problemModels.progress === "UPDATING" ||
-      userSubmissions.progress === "UPDATING"
-    );
-  }, [contests, problems, problemModels, userSubmissions]);
 
   const closetNotification = useCallback(() => {
     setNotification({ ...notification, open: false });
@@ -235,18 +223,24 @@ export function Entry(): JSX.Element {
         updateProblems: updateProblems,
         updateProblemModels: updateProblemModels,
         updateUserSubmissions: updateUserSubmissions,
+        updateAll: updateAll,
         notification: notification,
         closeNotification: closetNotification,
       }}
     >
-      <div>
-        <div className={classes.description}>
+      <div className={classes.root}>
+        <div>
           <Typography variant="h6" gutterBottom>
-            Update information
+            Update database
           </Typography>
-          <Typography variant="body2" color="textSecondary">
-            Get contests, problems and submissions information using API of
-            AtCoder Problems, then store them in local database.
+          <Typography variant="body1">
+            Sometimes, you will need this manipulation to keep the local
+            database updated.
+          </Typography>
+          <Typography variant="body1">
+            You get contests, problems and submissions information using API of
+            AtCoder Problems, then store them in local database. It may takes a
+            few minutes.
           </Typography>
         </div>
 
@@ -255,21 +249,9 @@ export function Entry(): JSX.Element {
         </div>
 
         <div className={classes.actions}>
-          <Grid container justify="space-between">
-            <Grid item xs={1} />
-            <Grid item xs={3}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={updateAll}
-                disabled={anyButtonPressed}
-                className={classes.button}
-              >
-                UPDATE ALL
-              </Button>
-            </Grid>
-          </Grid>
+          <Actions />
         </div>
+        <Notification />
       </div>
     </UpdateDatabaseContext.Provider>
   );

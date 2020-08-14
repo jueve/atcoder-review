@@ -6,6 +6,7 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
+  Typography,
 } from "@material-ui/core";
 import { Done, Report, Update } from "@material-ui/icons";
 import { Context as UpdateDatabaseContext } from "./Context";
@@ -59,7 +60,7 @@ export function UpdateList(): JSX.Element {
           <Icon {...contests} />
         </ListItemIcon>
         <ListItemText
-          primary="Contests"
+          primary="Contests (e.g. title, start date)"
           secondary={`Last updated: ${contests.lastUpdate}`}
         />
         <Button
@@ -77,7 +78,7 @@ export function UpdateList(): JSX.Element {
           <Icon {...problems} />
         </ListItemIcon>
         <ListItemText
-          primary="Problems"
+          primary="Problems (e.g. title, contest id)"
           secondary={`Last updated: ${problems.lastUpdate}`}
         />
         <Button
@@ -95,7 +96,7 @@ export function UpdateList(): JSX.Element {
           <Icon {...problemModels} />
         </ListItemIcon>
         <ListItemText
-          primary="Problem Models"
+          primary="Problem Models (e.g. difficulty)"
           secondary={`Last updated: ${problemModels.lastUpdate}`}
         />
         <Button
@@ -113,7 +114,7 @@ export function UpdateList(): JSX.Element {
           <Icon {...userSubmissions} />
         </ListItemIcon>
         <ListItemText
-          primary="User Submissions"
+          primary="User Submissions (e.g. submission date, problem id)"
           secondary={`Last updated: ${userSubmissions.lastUpdate}`}
         />
         <Button

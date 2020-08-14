@@ -10,6 +10,7 @@ interface C {
   updateProblems: () => void;
   updateProblemModels: () => void;
   updateUserSubmissions: () => void;
+  updateAll: () => void;
   notification: NotificationStatus;
   closeNotification: () => void;
 }
@@ -34,6 +35,9 @@ export const Context = createContext<C>({
     return;
   },
   updateUserSubmissions: () => {
+    return;
+  },
+  updateAll: () => {
     return;
   },
   notification: {

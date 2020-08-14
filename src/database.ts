@@ -10,7 +10,6 @@ const databasePath = (): string => {
     return `${os.homedir()}/.atcoder-review/atcoder.sqlite`;
   }
 };
-
 const database = Knex({
   client: "sqlite3",
   connection: {

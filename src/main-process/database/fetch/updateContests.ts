@@ -48,7 +48,8 @@ export const updateContests = (
           })
           .on("end", () => {
             const data: Buffer = Buffer.concat(chunks);
-            const schema = JSON.parse(data.toString());
+            const schema: Array<RawContest> = JSON.parse(data.toString());
+            const l: number = schema.length;
 
             database(contests)
               .delete()
@@ -57,11 +58,13 @@ export const updateContests = (
             schema.forEach((raw: RawContest) => {
               database(contests)
                 .insert(createContestRecord(raw))
-                .then((res) => event.reply(succeeded, res))
+                .then((res: Array<number>) => {
+                  if (res[0] >= l) {
+                    event.reply(succeeded);
+                  }
+                })
                 .catch((_res) => event.reply(failed));
             });
-
-            event.reply(succeeded);
           })
           .on("error", (e: any) => {
             event.reply(failed);

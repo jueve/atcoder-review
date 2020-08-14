@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Typography } from "@material-ui/core";
+import { Button, Typography, List, ListItem, ListItemText } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
 export function Entry(): JSX.Element {
@@ -11,9 +11,14 @@ export function Entry(): JSX.Element {
         </Typography>
       </div>
       <div>
-        <Button component={Link} to={`/update-database`}>
-          UPDATE DATABASE
-        </Button>
+        <Typography variant="body1" gutterBottom>
+          Before starting application...
+        </Typography>
+        <List>
+          <ListItem component={Link} to="/update-database">
+            <ListItemText primary="Update database" />
+          </ListItem>
+        </List>
       </div>
     </div>
   );

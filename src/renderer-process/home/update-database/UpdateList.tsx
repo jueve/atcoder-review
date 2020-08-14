@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useContext } from "react";
 import {
   Button,
   List,
@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { Done, Report, Update } from "@material-ui/icons";
-import { Context as HomeContext } from "./Context";
+import { Context as UpdateDatabaseContext } from "./Context";
 import { FetchStatus } from "./types";
 
 const Icon = (status: FetchStatus): JSX.Element => {
@@ -50,7 +50,7 @@ export function UpdateList(): JSX.Element {
     updateProblems,
     updateUserSubmissions,
     updateProblemModels,
-  } = useContext(HomeContext);
+  } = useContext(UpdateDatabaseContext);
 
   return (
     <List>

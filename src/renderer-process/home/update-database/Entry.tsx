@@ -7,7 +7,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { BASE_WIDTH } from "../../../theme/layout";
 import { FetchStatus, NotificationStatus } from "./types";
 import { ipcRenderer } from "electron";
 import {
@@ -35,10 +34,6 @@ import { UpdateList } from "./UpdateList";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      width: BASE_WIDTH * 8,
-    },
-
     description: {
       margin: theme.spacing(4, 0, 0, 0),
     },

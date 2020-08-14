@@ -1,8 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { Snackbar } from "@material-ui/core";
 import Alert, { Color } from "@material-ui/lab/Alert";
-import { BASE_WIDTH } from "../../../theme/layout";
-import { makeStyles } from "@material-ui/core/styles";
 import { Context as HomeContext } from "./Context";
 
 export function Notification(): JSX.Element {

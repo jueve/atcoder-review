@@ -76,22 +76,42 @@ export function Entry(): JSX.Element {
   const updateContests = useCallback(() => {
     setContests({ ...contests, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_CONTESTS);
-  }, [setContests, contests]);
+    setNotification({
+      open: true,
+      status: "info",
+      message: "Trying to update contests...",
+    });
+  }, [setContests, contests, setNotification]);
 
   const updateProblems = useCallback(() => {
     setProblems({ ...problems, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_PROBLEMS);
-  }, [problems, setProblems]);
+    setNotification({
+      open: true,
+      status: "info",
+      message: "Trying to update problems...",
+    });
+  }, [problems, setProblems, setNotification]);
 
   const updateProblemModels = useCallback(() => {
     setProblemModels({ ...problemModels, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_PROBLEM_MODELS);
-  }, [setProblemModels, problemModels]);
+    setNotification({
+      open: true,
+      status: "info",
+      message: "Trying to update problem models...",
+    });
+  }, [setProblemModels, problemModels, setNotification]);
 
   const updateUserSubmissions = useCallback(() => {
     setUserSubmissions({ ...userSubmissions, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_USER_SUBMISSIONS);
-  }, [setUserSubmissions, userSubmissions]);
+    setNotification({
+      open: true,
+      status: "info",
+      message: "Trying to update user submissions...",
+    });
+  }, [setUserSubmissions, userSubmissions, setNotification]);
 
   const updateAll = useCallback(() => {
     setContests({ ...contests, progress: "UPDATING" });
@@ -102,6 +122,11 @@ export function Entry(): JSX.Element {
     ipcRenderer.send(UPDATE_PROBLEM_MODELS);
     ipcRenderer.send(UPDATE_PROBLEMS);
     ipcRenderer.send(UPDATE_USER_SUBMISSIONS);
+    setNotification({
+      open: true,
+      status: "info",
+      message: "Trying to update the local database...",
+    });
   }, [
     contests,
     problems,

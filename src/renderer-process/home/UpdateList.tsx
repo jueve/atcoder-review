@@ -5,10 +5,42 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Tooltip,
 } from "@material-ui/core";
+import { Done, Report, Update } from "@material-ui/icons";
 import { Context as HomeContext } from "./Context";
+import { FetchStatus } from "./types";
 
-export function UpdateList() {
+const Icon = (status: FetchStatus): JSX.Element => {
+  switch (status.progress) {
+    case "STANDS_BY":
+      return (
+        <Tooltip title="Waiting update">
+          <Update />
+        </Tooltip>
+      );
+    case "UPDATING":
+      return (
+        <Tooltip title="Updating...">
+          <Update />
+        </Tooltip>
+      );
+    case "SUCCEEDED":
+      return (
+        <Tooltip title="Update succeeded">
+          <Done />
+        </Tooltip>
+      );
+    case "FAILED":
+      return (
+        <Tooltip title="Update failed">
+          <Report />
+        </Tooltip>
+      );
+  }
+};
+
+export function UpdateList(): JSX.Element {
   const {
     contests,
     problems,
@@ -23,7 +55,9 @@ export function UpdateList() {
   return (
     <List>
       <ListItem>
-        <ListItemIcon></ListItemIcon>
+        <ListItemIcon>
+          <Icon {...contests} />
+        </ListItemIcon>
         <ListItemText
           primary="Contests"
           secondary={`Last updated: ${contests.lastUpdate}`}
@@ -39,7 +73,9 @@ export function UpdateList() {
       </ListItem>
 
       <ListItem>
-        <ListItemIcon></ListItemIcon>
+        <ListItemIcon>
+          <Icon {...problems} />
+        </ListItemIcon>
         <ListItemText
           primary="Problems"
           secondary={`Last updated: ${problems.lastUpdate}`}
@@ -55,7 +91,9 @@ export function UpdateList() {
       </ListItem>
 
       <ListItem>
-        <ListItemIcon></ListItemIcon>
+        <ListItemIcon>
+          <Icon {...problemModels} />
+        </ListItemIcon>
         <ListItemText
           primary="Problem Models"
           secondary={`Last updated: ${problemModels.lastUpdate}`}
@@ -71,7 +109,9 @@ export function UpdateList() {
       </ListItem>
 
       <ListItem>
-        <ListItemIcon></ListItemIcon>
+        <ListItemIcon>
+          <Icon {...userSubmissions} />
+        </ListItemIcon>
         <ListItemText
           primary="User Submissions"
           secondary={`Last updated: ${userSubmissions.lastUpdate}`}

@@ -60,7 +60,7 @@ export const updateContests = (
                 .insert(createContestRecord(raw))
                 .then((res: Array<number>) => {
                   if (res[0] >= l) {
-                    event.reply(succeeded, res[0], l);
+                    event.reply(succeeded);
                   }
                 })
                 .catch((_res) => event.reply(failed));

@@ -246,11 +246,9 @@ export function Entry(): JSX.Element {
           </Typography>
           <Typography variant="body2" color="textSecondary">
             Get contests, problems and submissions information using API of
-            AtCoder Problems, then store them in local database.;
+            AtCoder Problems, then store them in local database.
           </Typography>
         </div>
-
-        <div className={classes.content}></div>
 
         <div className={classes.content}>
           <UpdateList />

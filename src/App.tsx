@@ -7,6 +7,7 @@ import { Button, Grid } from "@material-ui/core";
 import { Entry as HomeEntry } from "./renderer-process/home/Entry";
 import { Entry as FreeQueueEntry } from "./renderer-process/free/wrapper/Entry";
 import "./root.css";
+import { Entry as UpdateDatabase } from "./renderer-process/home/update-database/Entry";
 
 const useStyles = makeStyles({
   root: {
@@ -57,6 +58,7 @@ function App(): JSX.Element {
             <Grid item xs={9} className={classes.inner}>
               <Switch>
                 <Route exact path="/" component={HomeEntry} />
+                <Route path="/update-database" component={UpdateDatabase} />
                 <Route path="/free-queue" component={FreeQueueEntry} />
                 <Route path="/date-queue">
                   <div />

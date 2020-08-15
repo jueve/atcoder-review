@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useReducer } from "react";
 import { Context as FreeQueueContext } from "./Context";
 import { ipcRenderer } from "electron";
-import { FQItem, SnackbarAction, SortAction } from "./types";
+import { FQItem, NotificationWithMessage, SortAction } from "./types";
 import Content from "./Content";
 import { getItems } from "./getItems";
 import {
@@ -55,13 +55,16 @@ const getItemsToShow = (
   return arr;
 };
 
+/**
+ *
+ */
 export function Entry(): JSX.Element {
   const [items, setItems] = useState(() => ipcRenderer.sendSync(GET_ALL_ITEMS));
   const [page, setPage] = useState(1);
   const [pageLength, setPageLength] = useState(() => getPageLength(items, 5));
   const [toShow, setToShow] = useState([]);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [notification, setNotification] = useState<SnackbarAction>({
+  const [notification, setNotification] = useState<NotificationWithMessage>({
     status: "warning",
     open: false,
     message: "",

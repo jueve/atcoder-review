@@ -1,5 +1,6 @@
 import { createContext } from "react";
-import { FetchStatus, NotificationStatus } from "./types";
+import { FetchStatus } from "./types";
+import { NotificationWithMessage } from "../wrapper/types";
 
 interface C {
   contests: FetchStatus;
@@ -11,7 +12,7 @@ interface C {
   updateProblemModels: () => void;
   updateUserSubmissions: () => void;
   updateAll: () => void;
-  notification: NotificationStatus;
+  notification: NotificationWithMessage;
   closeNotification: () => void;
 }
 

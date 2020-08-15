@@ -1,12 +1,12 @@
 import { createContext } from "react";
 import { UserId } from "./types";
-import { MessageWithNotification } from "../wrapper/types";
+import { NotificationWithMessage } from "../wrapper/types";
 
 interface C {
   userId: UserId;
   inputUserId: (_arg0: UserId) => void;
   updateUserId: () => void;
-  notification: MessageWithNotification;
+  notification: NotificationWithMessage;
   closeNotification: () => void;
 }
 

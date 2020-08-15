@@ -4,11 +4,11 @@ import { Candidate } from "../../../defines/Candidate";
 export type FQItem = Item.FreeQueueItem;
 export type FQCandidate = Candidate.FreeQueueCandidate;
 
-type SnackBarStatus = "error" | "warning" | "info" | "success";
+type NotificationStatus = "error" | "warning" | "info" | "success";
 
-export interface SnackbarAction {
-  status: SnackBarStatus;
+export interface NotificationWithMessage {
   open: boolean;
+  status: NotificationStatus;
   message: string;
 }
 

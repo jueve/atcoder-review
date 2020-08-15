@@ -5,6 +5,9 @@ import database from "../../../database";
 import { UserSubmission } from "../../../defines/UserSubmission";
 import { v4 } from "uuid";
 import moment from "moment";
+import { readFileSync } from "fs";
+import { CONFIG } from "../../constants";
+import { resolvePath } from "../../resolvePath";
 
 type RawUserSubmission = UserSubmission.RawUserSubmission;
 type UserSubmission = UserSubmission.UserSubmission;
@@ -40,6 +43,23 @@ const isUnder = (epochSecond: number, days: number): boolean => {
   return moment.duration(now.diff(epochSecond)).days() <= days;
 };
 
+const getUserId = (): string => {
+  const config = resolvePath(CONFIG);
+  const data: string = readFileSync(config, { encoding: "utf-8" });
+  const schema = JSON.parse(data);
+
+  if (
+    schema !== null &&
+    schema !== undefined &&
+    schema.userId !== null &&
+    schema.userId !== undefined
+  ) {
+    return schema.userId;
+  } else {
+    throw new Error("Can't resolve user id from config file.");
+  }
+};
+
 export const updateUserSubmissions = (
   userSubmission: TableName,
   begin: UpdateUserSubmissions,
@@ -48,11 +68,12 @@ export const updateUserSubmissions = (
 ): void => {
   ipcMain.on(begin, (event) => {
     try {
+      const userId = getUserId();
       const requestForUserSubmission = net.request({
         method: "GET",
         protocol: "https:",
         hostname: "kenkoooo.com",
-        path: "/atcoder/atcoder-api/results?user=cashitsuki",
+        path: `/atcoder/atcoder-api/results?user=${userId}`,
       });
       const chunks: Array<Buffer> = [];
       requestForUserSubmission.on("response", (response) => {

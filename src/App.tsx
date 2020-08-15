@@ -8,6 +8,7 @@ import { Entry as HomeEntry } from "./renderer-process/home/Entry";
 import { Entry as FreeQueueEntry } from "./renderer-process/free/wrapper/Entry";
 import "./root.css";
 import { Entry as UpdateDatabase } from "./renderer-process/home/update-database/Entry";
+import { Entry as UpdateUserId } from "./renderer-process/home/update-user-id/Entry";
 
 const useStyles = makeStyles({
   root: {
@@ -26,6 +27,9 @@ const useStyles = makeStyles({
   },
 });
 
+/**
+ *
+ */
 function App(): JSX.Element {
   const classes = useStyles();
   return (
@@ -59,6 +63,7 @@ function App(): JSX.Element {
               <Switch>
                 <Route exact path="/" component={HomeEntry} />
                 <Route path="/update-database" component={UpdateDatabase} />
+                <Route path="/update-user-id" component={UpdateUserId} />
                 <Route path="/free-queue" component={FreeQueueEntry} />
                 <Route path="/date-queue">
                   <div />

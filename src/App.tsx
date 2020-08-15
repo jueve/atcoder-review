@@ -4,7 +4,7 @@ import { APPLICATION_THEME } from "./theme/theme";
 import { BASE_WIDTH, TOP } from "./theme/layout";
 import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import { Button, Grid } from "@material-ui/core";
-import { Entry as HomeEntry } from "./renderer-process/home/Entry";
+import { Entry as HomeEntry } from "./renderer-process/home/wrapper/Entry";
 import { Entry as FreeQueueEntry } from "./renderer-process/free/wrapper/Entry";
 import "./root.css";
 import { Entry as UpdateDatabase } from "./renderer-process/home/update-database/Entry";

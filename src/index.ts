@@ -1,6 +1,8 @@
 /*eslint @typescript-eslint/no-explicit-any: "off" */
 import { app, BrowserWindow } from "electron";
 import standByDatabaseOperations from "./main-process/database/standByDatabaseOperaions";
+import { standByLogOperations } from "./main-process/log/standByLogOperations";
+import { standByConfigOperations } from "./main-process/config/standByConfigOperations";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
@@ -55,4 +57,6 @@ app.on("activate", () => {
 // code. You can also put them in separate files and import them here.
 app.whenReady().then(() => {
   standByDatabaseOperations();
+  standByLogOperations();
+  standByConfigOperations();
 });

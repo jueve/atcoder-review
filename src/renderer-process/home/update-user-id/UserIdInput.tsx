@@ -8,10 +8,6 @@ import { Context as UpdateUserIdContext } from "./Context";
 export function UserIdInput(): JSX.Element {
   const { userId, inputUserId } = useContext(UpdateUserIdContext);
 
-  const currentUserName = useMemo(() => {
-    return userId;
-  }, [userId]);
-
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>): void => {
       const input: string = event.target.value as string;
@@ -23,7 +19,7 @@ export function UserIdInput(): JSX.Element {
   return (
     <div>
       <Typography variant="body1">
-        Current user name is &quot;{currentUserName}&quot;.
+        Current user name is &quot;{userId}&quot;.
       </Typography>
       <TextField
         defaultValue=""

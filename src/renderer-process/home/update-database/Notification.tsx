@@ -3,6 +3,9 @@ import { Snackbar } from "@material-ui/core";
 import Alert, { Color } from "@material-ui/lab/Alert";
 import { Context as HomeContext } from "./Context";
 
+/**
+ *
+ */
 export function Notification(): JSX.Element {
   const { notification, closeNotification } = useContext(HomeContext);
 

@@ -1,5 +1,5 @@
 import process from "process";
-import path from "path";
+import * as path from "path";
 import { basePathInDevelopment, basePathInProduction } from "../../base-path";
 
 export const getPathToLogFile = (): string => {

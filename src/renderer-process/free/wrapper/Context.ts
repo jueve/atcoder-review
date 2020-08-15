@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import { FQItem, FQCandidate } from "./types";
+import { FQItem, NotificationWithMessage } from "./types";
 
 interface C {
   items: Array<FQItem>;
@@ -7,7 +7,7 @@ interface C {
   itemsPerPage: number;
   page: number;
   pageLength: number;
-  notification: { status: string; open: boolean; message: string };
+  notification: NotificationWithMessage;
   changeToShow: (_arg0: number, _arg1: number, _arg2: Array<FQItem>) => void;
   resetPage: () => void;
   closeNotification: () => void;

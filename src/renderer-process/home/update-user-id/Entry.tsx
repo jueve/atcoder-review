@@ -15,7 +15,7 @@ import { UserId } from "./types";
 import { Context as UpdateUserIdContext } from "./Context";
 import { UserIdInput } from "./UserIdInput";
 import { Actions } from "./Actions";
-import { MessageWithNotification } from "../wrapper/types";
+import { NotificationWithMessage } from "../wrapper/types";
 import { Notification } from "./Notification";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export function Entry(): JSX.Element {
   const classes = useStyles();
   const [userId, setUserId] = useState<UserId>(null);
-  const [notification, setNotification] = useState<MessageWithNotification>({
+  const [notification, setNotification] = useState<NotificationWithMessage>({
     open: false,
     status: "info",
     message: "",

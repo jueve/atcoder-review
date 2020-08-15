@@ -1,6 +1,7 @@
 import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
 import React, { useCallback, useEffect, useState, useMemo } from "react";
-import { FetchStatus, NotificationStatus } from "./types";
+import { FetchStatus } from "./types";
+import { NotificationWithMessage } from "../wrapper/types";
 import { ipcRenderer } from "electron";
 import {
   UPDATE_CONTESTS,
@@ -57,6 +58,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const getCurrentEpochSecond = (): number => moment().unix();
 
+/**
+ *
+ */
 export function Entry(): JSX.Element {
   const classes = useStyles();
   const [contests, setContests] = useState<FetchStatus>({
@@ -75,7 +79,7 @@ export function Entry(): JSX.Element {
     lastUpdate: 0,
     progress: "STANDS_BY",
   });
-  const [notification, setNotification] = useState<NotificationStatus>({
+  const [notification, setNotification] = useState<NotificationWithMessage>({
     open: false,
     status: "success",
     message: "",

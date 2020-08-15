@@ -1,6 +1,6 @@
 type NotificationStatus = "error" | "warning" | "info" | "success";
 
-export interface MessageWithNotification {
+export interface NotificationWithMessage {
   open: boolean;
   status: NotificationStatus;
   message: string;

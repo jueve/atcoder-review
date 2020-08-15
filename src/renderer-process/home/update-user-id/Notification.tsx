@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import { Snackbar } from "@material-ui/core";
 import Alert, { Color } from "@material-ui/lab/Alert";
-import { Context as HomeContext } from "./Context";
+import { Context as UpdateUerIdContext } from "./Context";
 
 /**
  *
  */
 export function Notification(): JSX.Element {
-  const { notification, closeNotification } = useContext(HomeContext);
+  const { notification, closeNotification } = useContext(UpdateUerIdContext);
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string): void => {
     if (reason === "clickaway") {

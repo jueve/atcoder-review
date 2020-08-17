@@ -1,6 +1,6 @@
 import { TableName } from "../TableName";
 import { ipcMain, net } from "electron";
-import database from "../../../database";
+import database from "../../database";
 import { v4 } from "uuid";
 import { ProblemModel } from "../../../defines/ProblemModel";
 

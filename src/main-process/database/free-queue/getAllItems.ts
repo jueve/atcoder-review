@@ -1,6 +1,6 @@
 import { TableName } from "../TableName";
 import { ipcMain } from "electron";
-import database from "../../../database";
+import database from "../../database";
 
 type GetAllItems =
   | "GET_ALL_ITEMS"

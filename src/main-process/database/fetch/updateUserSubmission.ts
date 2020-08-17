@@ -1,7 +1,7 @@
 import { TableName } from "../TableName";
 import { ipcMain, net } from "electron";
 import { Set } from "immutable";
-import database from "../../../database";
+import database from "../../database";
 import { UserSubmission } from "../../../defines/UserSubmission";
 import { v4 } from "uuid";
 import moment from "moment";

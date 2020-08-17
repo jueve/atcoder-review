@@ -1,6 +1,6 @@
 import { TableName } from "../TableName";
 import { ipcMain } from "electron";
-import database from "../../database";
+import { database } from "../../database";
 import { Contest } from "../../../defines/Contest";
 import { Problem } from "../../../defines/Problem";
 import { Candidate } from "../../../defines/Candidate";

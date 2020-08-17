@@ -1,6 +1,6 @@
 import { TableName } from "../TableName";
 import { ipcMain } from "electron";
-import database from "../../database";
+import { database } from "../../database";
 
 type GetSingleItem =
   | "GET_SINGLE_ITEM"

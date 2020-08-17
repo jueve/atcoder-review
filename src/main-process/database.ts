@@ -10,7 +10,7 @@ const databasePath = (): string => {
     return `${os.homedir()}/.atcoder-review/atcoder.sqlite`;
   }
 };
-const database = Knex({
+export const database = Knex({
   client: "sqlite3",
   connection: {
     filename: databasePath(),
@@ -129,5 +129,3 @@ database.schema.hasTable("user_submissions").then((exists) => {
     });
   }
 });
-
-export default database;

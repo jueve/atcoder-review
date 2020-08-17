@@ -3,6 +3,7 @@ import { app, BrowserWindow } from "electron";
 import standByDatabaseOperations from "./main-process/database/standByDatabaseOperaions";
 import { standByLogOperations } from "./main-process/log/standByLogOperations";
 import { standByConfigOperations } from "./main-process/config/standByConfigOperations";
+import { standByInitialization } from "./main-process/initialization/standByInitialization";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
@@ -59,4 +60,5 @@ app.whenReady().then(() => {
   standByDatabaseOperations();
   standByLogOperations();
   standByConfigOperations();
+  standByInitialization();
 });

@@ -17,7 +17,7 @@ interface UserSubmissions {
 }
 
 export interface Config {
-  user_name: UserName;
+  user_id: UserName;
   switch_to_collect: SwitchToCollect;
   user_submissions: UserSubmissions;
 }

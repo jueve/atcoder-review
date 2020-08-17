@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Done, Report, Update } from "@material-ui/icons";
-import { Context as UpdateDatabaseContext } from "./Context";
+import { Context as DatabaseUpdateContext } from "./Context";
 import { FetchStatus } from "./types";
 import moment from "moment";
 
@@ -52,7 +52,7 @@ export function UpdateList(): JSX.Element {
     updateProblems,
     updateUserSubmissions,
     updateProblemModels,
-  } = useContext(UpdateDatabaseContext);
+  } = useContext(DatabaseUpdateContext);
 
   const showLocalTime = (updateEpochSecond: number): string => {
     if (updateEpochSecond === Number.MIN_SAFE_INTEGER) {

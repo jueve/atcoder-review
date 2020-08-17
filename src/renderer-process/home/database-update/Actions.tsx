@@ -1,4 +1,4 @@
-import { Context as UpdateDatabaseContext } from "./Context";
+import { Context as DatabaseUpdateContext } from "./Context";
 import React, {
   useCallback,
   useContext,
@@ -33,7 +33,7 @@ export function Actions() {
     problemModels,
     userSubmissions,
     updateAll,
-  } = useContext(UpdateDatabaseContext);
+  } = useContext(DatabaseUpdateContext);
   const history = useHistory();
 
   const anyButtonPressed = useMemo(() => {

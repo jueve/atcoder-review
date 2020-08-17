@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { ipcRenderer } from "electron";
-import { GET_LOG } from "../../../main-process/log/update-database/getLog";
+import { GET_LOG } from "../../../main-process/log/database-update/getLog";
 import { GET_USER_ID } from "../../../main-process/config/user-id/getUserId";
 
 /**

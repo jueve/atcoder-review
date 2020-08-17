@@ -31,12 +31,12 @@ import { BASE_WIDTH } from "../../../theme/layout";
 import {
   GET_LOG_SUCCEEDED,
   GET_LOG_FAILED,
-} from "../../../main-process/log/update-database/getLog";
+} from "../../../main-process/log/database-update/getLog";
 import {
   UPDATE_LOG,
   UPDATE_LOG_SUCCEEDED,
   UPDATE_LOG_FAILED,
-} from "../../../main-process/log/update-database/updateLog";
+} from "../../../main-process/log/database-update/updateLog";
 import { UpdateDatabaseLog } from "../../../main-process/log/types";
 import moment from "moment";
 

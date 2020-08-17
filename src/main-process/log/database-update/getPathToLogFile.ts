@@ -4,8 +4,8 @@ import { basePathInDevelopment, basePathInProduction } from "../../base-path";
 
 export const getPathToLogFile = (): string => {
   if (process.env.NODE_ENV === "development") {
-    return path.join(basePathInDevelopment, "/update-database-log.json");
+    return path.join(basePathInDevelopment, "/database-update-log.json");
   } else {
-    return path.join(basePathInProduction, "/update-database-log.json");
+    return path.join(basePathInProduction, "/database-update-log.json");
   }
 };

@@ -11,20 +11,3 @@ export interface NotificationWithMessage {
   status: NotificationStatus;
   message: string;
 }
-
-type KindOfSort =
-  | "INSERT_DATE"
-  | "CONTEST_DATE"
-  | "DIFFICULTY"
-  | "DONE_UNDONE"
-  | "DND"
-  | "RESET";
-
-type OrderOfSort = "ASCENDANT" | "DESCENDANT";
-
-export interface SortAction {
-  kind?: KindOfSort;
-  order?: OrderOfSort;
-  startIndex?: OrderOfSort;
-  sortIndex?: OrderOfSort;
-}

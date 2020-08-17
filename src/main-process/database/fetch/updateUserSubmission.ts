@@ -51,10 +51,10 @@ const getUserId = (): string => {
   if (
     schema !== null &&
     schema !== undefined &&
-    schema.userId !== null &&
-    schema.userId !== undefined
+    schema.user_id !== null &&
+    schema.user_id !== undefined
   ) {
-    return schema.userId;
+    return schema.user_id;
   } else {
     throw new Error("Can't resolve user id from config file.");
   }

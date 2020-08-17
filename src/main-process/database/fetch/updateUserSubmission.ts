@@ -108,6 +108,12 @@ export const updateUserSubmissions = (
             });
 
             const l = rows.length;
+
+            if (l === 0) {
+              event.reply(succeeded);
+              return;
+            }
+
             rows.forEach((r) => {
               database(userSubmission)
                 .insert(r)

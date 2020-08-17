@@ -21,12 +21,8 @@ export const getUserId = (
       if (fs.existsSync(config)) {
         fs.readFile(config, (_error, data: Buffer) => {
           const schema = JSON.parse(data.toString());
-          if (
-            schema !== null &&
-            schema.userId !== null &&
-            schema.userId !== undefined
-          ) {
-            event.reply(succeeded, schema.userId);
+          if (schema.user_id !== undefined) {
+            event.reply(succeeded, schema.user_id);
           } else {
             event.reply(failed, init);
           }

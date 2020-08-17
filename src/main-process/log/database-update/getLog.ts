@@ -1,7 +1,8 @@
 import * as fs from "fs";
-import { getPathToLogFile } from "./getPathToLogFile";
 import { ipcMain } from "electron";
 import { UpdateDatabaseLog } from "../types";
+import { resolvePath } from "../../resolvePath";
+import { DATABASE_UPDATE_LOG } from "../../constants";
 
 type GetLog = "GET_LOG" | "GET_LOG_SUCCEEDED" | "GET_LOG_FAILED";
 export const GET_LOG = "GET_LOG";
@@ -19,7 +20,7 @@ export const getLog = (
     problemModels: Number.MIN_SAFE_INTEGER,
     userSubmissions: Number.MIN_SAFE_INTEGER,
   };
-  const log = getPathToLogFile();
+  const log = resolvePath(DATABASE_UPDATE_LOG);
   ipcMain.on(begin, (event) => {
     try {
       if (fs.existsSync(log)) {

@@ -21,7 +21,7 @@ const message: Record<string, string> = {
 };
 
 const init: Config = {
-  user_name: null,
+  user_id: null,
   switch_to_collect: {
     abc: true,
     arc: true,
@@ -40,7 +40,7 @@ const init: Config = {
 
 const propertiesFullFilled = (config: Config): boolean => {
   return (
-    config.user_name !== undefined &&
+    config.user_id !== undefined &&
     config.user_submissions.length_of_submissions !== undefined &&
     config.user_submissions.length_of_days !== undefined &&
     config.switch_to_collect.abc !== undefined &&

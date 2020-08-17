@@ -23,15 +23,19 @@ export const updateUserId = (
       if (fs.existsSync(config)) {
         fs.readFile(config, (_error, data) => {
           const schema = JSON.parse(data.toString());
-          schema.userId = newUserId;
-          fs.writeFile(
-            config,
-            JSON.stringify(schema),
-            { flag: "w" },
-            (_error) => {
-              event.reply(succeeded);
-            }
-          );
+          if (schema.user_id !== undefined && schema.user_id !== null) {
+            schema.user_id = newUserId;
+            fs.writeFile(
+              config,
+              JSON.stringify(schema),
+              { flag: "w" },
+              (_error) => {
+                event.reply(succeeded);
+              }
+            );
+          } else {
+            event.reply(failed);
+          }
         });
       } else {
         event.reply(failed);

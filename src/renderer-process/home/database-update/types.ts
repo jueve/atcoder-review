@@ -4,3 +4,5 @@ export interface FetchStatus {
   lastUpdate: number;
   progress: Fetch;
 }
+
+export interface ActionOfDatabaseUpdate {}

@@ -23,7 +23,7 @@ import {
   UPDATE_USER_SUBMISSIONS_FAILED,
   UPDATE_USER_SUBMISSIONS_SUCCEEDED,
 } from "../../../main-process/database/fetch/updateUserSubmission";
-import { Context as UpdateDatabaseContext } from "./Context";
+import { Context as DatabaseUpdateContext } from "./Context";
 import { UpdateList } from "./UpdateList";
 import { Actions } from "./Actions";
 import { Notification } from "./Notification";
@@ -31,12 +31,12 @@ import { BASE_WIDTH } from "../../../theme/layout";
 import {
   GET_LOG_SUCCEEDED,
   GET_LOG_FAILED,
-} from "../../../main-process/log/update-database/getLog";
+} from "../../../main-process/log/database-update/getLog";
 import {
   UPDATE_LOG,
   UPDATE_LOG_SUCCEEDED,
   UPDATE_LOG_FAILED,
-} from "../../../main-process/log/update-database/updateLog";
+} from "../../../main-process/log/database-update/updateLog";
 import { UpdateDatabaseLog } from "../../../main-process/log/types";
 import moment from "moment";
 
@@ -303,7 +303,7 @@ export function Entry(): JSX.Element {
   }, [contests, problems, problemModels, userSubmissions, getLastUpdate]);
 
   return (
-    <UpdateDatabaseContext.Provider
+    <DatabaseUpdateContext.Provider
       value={{
         contests: contests,
         problems: problems,
@@ -343,6 +343,6 @@ export function Entry(): JSX.Element {
         </div>
         <Notification />
       </div>
-    </UpdateDatabaseContext.Provider>
+    </DatabaseUpdateContext.Provider>
   );
 }

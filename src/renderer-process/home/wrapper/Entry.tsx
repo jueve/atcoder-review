@@ -8,14 +8,14 @@ import {
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { ipcRenderer } from "electron";
-import { GET_LOG } from "../../../main-process/log/update-database/getLog";
+import { GET_LOG } from "../../../main-process/log/database-update/getLog";
 import { GET_USER_ID } from "../../../main-process/config/user-id/getUserId";
 
 /**
  *
  */
 export function Entry(): JSX.Element {
-  const handleLinkToUpdateDatabaseClick = (): void => {
+  const handleLinkToDatabaseUpdateClick = (): void => {
     ipcRenderer.send(GET_LOG);
   };
 
@@ -46,7 +46,7 @@ export function Entry(): JSX.Element {
           <ListItem
             component={Link}
             to="/update-database"
-            onClick={handleLinkToUpdateDatabaseClick}
+            onClick={handleLinkToDatabaseUpdateClick}
           >
             <ListItemText primary="Update database" />
           </ListItem>

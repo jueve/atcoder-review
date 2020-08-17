@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useReducer } from "react";
 import { Context as FreeQueueContext } from "./Context";
 import { ipcRenderer } from "electron";
-import { FQItem, NotificationWithMessage, SortAction } from "./types";
+import { FQItem, NotificationWithMessage } from "./types";
 import Content from "./Content";
 import { getItems } from "./getItems";
 import {

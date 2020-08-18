@@ -42,6 +42,9 @@ const Icon = (status: FetchStatus): JSX.Element => {
   }
 };
 
+/**
+ *
+ */
 export function UpdateList(): JSX.Element {
   const {
     contests,
@@ -58,11 +61,9 @@ export function UpdateList(): JSX.Element {
     if (updateEpochSecond === Number.MIN_SAFE_INTEGER) {
       return "?";
     } else {
-      return (
-        moment(updateEpochSecond * 1000)
-          .local()
-          .format("YYYY-MM-DD HH:mm")
-      );
+      return moment(updateEpochSecond * 1000)
+        .local()
+        .format("YYYY-MM-DD HH:mm");
     }
   };
 

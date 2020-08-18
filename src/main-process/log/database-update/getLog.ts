@@ -17,8 +17,8 @@ export const getLog = (
   const init: UpdateDatabaseLog = {
     contests: Number.MIN_SAFE_INTEGER,
     problems: Number.MIN_SAFE_INTEGER,
-    problemModels: Number.MIN_SAFE_INTEGER,
-    userSubmissions: Number.MIN_SAFE_INTEGER,
+    problem_models: Number.MIN_SAFE_INTEGER,
+    user_submissions: Number.MIN_SAFE_INTEGER,
   };
   const log = resolvePath(DATABASE_UPDATE_LOG);
   ipcMain.on(begin, (event) => {

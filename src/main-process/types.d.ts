@@ -7,26 +7,26 @@ interface SwitchToCollect {
   joi: boolean;
   past: boolean;
   jag: boolean;
-  other_rated: boolean;
-  other_unrated: boolean;
+  otherRated: boolean;
+  otherUnrated: boolean;
 }
 
 interface UserSubmissions {
-  length_of_days: 365;
-  length_of_submissions: 5000;
+  lengthOfDays: 365;
+  lengthOfSubmissions: 5000;
 }
 
 export interface Config {
-  user_id: UserName;
-  switch_to_collect: SwitchToCollect;
-  user_submissions: UserSubmissions;
+  userId: UserName;
+  switchToCollect: SwitchToCollect;
+  userSubmissions: UserSubmissions;
 }
 
 export interface DatabaseUpdateLog {
   contests: number | null;
   problems: number | null;
-  problem_models: number | null;
-  user_submissions: number | null;
+  problemModels: number | null;
+  userSubmissions: number | null;
 }
 
 export interface Log {

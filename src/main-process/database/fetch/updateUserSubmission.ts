@@ -8,6 +8,7 @@ import moment from "moment";
 import { readFileSync } from "fs";
 import { CONFIG } from "../../constants";
 import { resolvePath } from "../../resolvePath";
+import { Config } from "../../types";
 
 type RawUserSubmission = UserSubmission.RawUserSubmission;
 type UserSubmission = UserSubmission.UserSubmission;
@@ -46,15 +47,15 @@ const isUnder = (epochSecond: number, days: number): boolean => {
 const getUserId = (): string => {
   const config = resolvePath(CONFIG);
   const data: string = readFileSync(config, { encoding: "utf-8" });
-  const schema = JSON.parse(data);
+  const schema: Config = JSON.parse(data);
 
   if (
     schema !== null &&
     schema !== undefined &&
-    schema.user_id !== null &&
-    schema.user_id !== undefined
+    schema.userId !== null &&
+    schema.userId !== undefined
   ) {
-    return schema.user_id;
+    return schema.userId;
   } else {
     throw new Error("Can't resolve user id from config file.");
   }

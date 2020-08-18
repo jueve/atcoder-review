@@ -23,8 +23,8 @@ export const updateUserId = (
       if (fs.existsSync(config)) {
         fs.readFile(config, (_error, data) => {
           const schema = JSON.parse(data.toString());
-          if (schema.user_id !== undefined) {
-            schema.user_id = newUserId;
+          if (schema.userId !== undefined) {
+            schema.userId = newUserId;
             fs.writeFile(
               config,
               JSON.stringify(schema),

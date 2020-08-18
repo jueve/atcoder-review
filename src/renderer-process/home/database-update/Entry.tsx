@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { DatabaseUpdate } from "./types";
 import { NotificationWithMessage } from "../types";
-import { ipcRenderer } from "electron";
+import { Data, ipcRenderer } from "electron";
 import {
   UPDATE_CONTESTS,
   UPDATE_CONTESTS_FAILED,
@@ -43,7 +43,7 @@ import { UpdateList } from "./UpdateList";
 import { Actions } from "./Actions";
 import { Notification } from "./Notification";
 import { BASE_WIDTH } from "../../../theme/layout";
-import { UpdateDatabaseLog } from "../../../main-process/log/types";
+import { DatabaseUpdateLog } from "../../../main-process/log/types";
 import moment from "moment";
 import { reducer } from "./reducer";
 
@@ -174,7 +174,7 @@ export function Entry(): JSX.Element {
     let mounted = true;
     ipcRenderer.on(
       GET_LOG_SUCCEEDED,
-      (_event, updateLog: UpdateDatabaseLog) => {
+      (_event, updateLog: DatabaseUpdateLog) => {
         if (mounted) {
           dispatchToDatabaseUpdate({
             destination: "CONTESTS",
@@ -188,19 +188,19 @@ export function Entry(): JSX.Element {
           });
           dispatchToDatabaseUpdate({
             destination: "PROBLEM_MODELS",
-            lastUpdate: updateLog.problem_models,
+            lastUpdate: updateLog.problemModels,
             progress: "STANDS_BY",
           });
           dispatchToDatabaseUpdate({
             destination: "USER_SUBMISSIONS",
-            lastUpdate: updateLog.user_submissions,
+            lastUpdate: updateLog.userSubmissions,
             progress: "STANDS_BY",
           });
         }
       }
     );
 
-    ipcRenderer.on(GET_LOG_FAILED, (_event, fetchLog: UpdateDatabaseLog) => {
+    ipcRenderer.on(GET_LOG_FAILED, (_event, fetchLog: DatabaseUpdateLog) => {
       if (mounted) {
         setNotification({
           open: true,
@@ -213,12 +213,13 @@ export function Entry(): JSX.Element {
     ipcRenderer.on(UPDATE_CONTESTS_SUCCEEDED, (_event) => {
       if (mounted) {
         const current = getCurrentEpochSecond();
-        ipcRenderer.send(UPDATE_LOG, {
+        const newLog: DatabaseUpdateLog = {
           contests: current,
           problems: databaseUpdate.problems.lastUpdate,
-          problem_models: databaseUpdate.problemModels.lastUpdate,
-          user_submissions: databaseUpdate.userSubmissions.lastUpdate,
-        });
+          problemModels: databaseUpdate.problemModels.lastUpdate,
+          userSubmissions: databaseUpdate.userSubmissions.lastUpdate,
+        };
+        ipcRenderer.send(UPDATE_LOG, newLog);
         dispatchToDatabaseUpdate({
           destination: "CONTESTS",
           lastUpdate: current,
@@ -250,12 +251,13 @@ export function Entry(): JSX.Element {
     ipcRenderer.on(UPDATE_PROBLEMS_SUCCEEDED, (_event) => {
       if (mounted) {
         const current = getCurrentEpochSecond();
-        ipcRenderer.send(UPDATE_LOG, {
+        const newLog: DatabaseUpdateLog = {
           contests: databaseUpdate.contests.lastUpdate,
           problems: current,
-          problem_models: databaseUpdate.problemModels.lastUpdate,
-          user_submissions: databaseUpdate.userSubmissions.lastUpdate,
-        });
+          problemModels: databaseUpdate.problemModels.lastUpdate,
+          userSubmissions: databaseUpdate.userSubmissions.lastUpdate,
+        };
+        ipcRenderer.send(UPDATE_LOG, newLog);
         dispatchToDatabaseUpdate({
           destination: "PROBLEMS",
           lastUpdate: current,
@@ -287,12 +289,13 @@ export function Entry(): JSX.Element {
     ipcRenderer.on(UPDATE_PROBLEM_MODELS_SUCCEEDED, (_event) => {
       if (mounted) {
         const current = getCurrentEpochSecond();
-        ipcRenderer.send(UPDATE_LOG, {
+        const newLog: DatabaseUpdateLog = {
           contests: databaseUpdate.contests.lastUpdate,
           problems: databaseUpdate.problems.lastUpdate,
-          problem_models: databaseUpdate.problemModels.lastUpdate,
-          user_submissions: databaseUpdate.userSubmissions.lastUpdate,
-        });
+          problemModels: current,
+          userSubmissions: databaseUpdate.userSubmissions.lastUpdate,
+        };
+        ipcRenderer.send(UPDATE_LOG, newLog);
         dispatchToDatabaseUpdate({
           destination: "PROBLEM_MODELS",
           lastUpdate: current,
@@ -324,12 +327,13 @@ export function Entry(): JSX.Element {
     ipcRenderer.on(UPDATE_USER_SUBMISSIONS_SUCCEEDED, (_event) => {
       if (mounted) {
         const current = getCurrentEpochSecond();
-        ipcRenderer.send(UPDATE_LOG, {
+        const newLog: DatabaseUpdateLog = {
           contests: databaseUpdate.contests.lastUpdate,
           problems: databaseUpdate.problems.lastUpdate,
-          problem_models: databaseUpdate.problemModels.lastUpdate,
-          user_submissions: current,
-        });
+          problemModels: databaseUpdate.problemModels.lastUpdate,
+          userSubmissions: current,
+        };
+        ipcRenderer.send(UPDATE_LOG, newLog);
         dispatchToDatabaseUpdate({
           destination: "USER_SUBMISSIONS",
           lastUpdate: current,

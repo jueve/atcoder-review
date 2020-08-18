@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { ipcMain } from "electron";
-import { UpdateDatabaseLog } from "../types";
+import { DatabaseUpdateLog } from "../types";
 import { resolvePath } from "../../resolvePath";
 import { DATABASE_UPDATE_LOG } from "../../constants";
 
@@ -15,7 +15,7 @@ export const updateLog = (
   failed: UpdateLog
 ): void => {
   const log = resolvePath(DATABASE_UPDATE_LOG);
-  ipcMain.on(begin, (event, newLog: UpdateDatabaseLog) => {
+  ipcMain.on(begin, (event, newLog: DatabaseUpdateLog) => {
     try {
       if (fs.existsSync(log)) {
         fs.writeFile(log, JSON.stringify(newLog), { flag: "w" }, (_error) => {

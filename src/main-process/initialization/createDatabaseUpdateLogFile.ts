@@ -26,16 +26,16 @@ const message: Record<string, string> = {
 const init: DatabaseUpdateLog = {
   contests: null,
   problems: null,
-  problem_models: null,
-  user_submissions: null,
+  problemModels: null,
+  userSubmissions: null,
 };
 
 const propertiesFullFilled = (log: DatabaseUpdateLog): boolean => {
   return (
     log.contests !== undefined &&
     log.problems !== undefined &&
-    log.problem_models !== undefined &&
-    log.user_submissions !== undefined
+    log.problemModels !== undefined &&
+    log.userSubmissions !== undefined
   );
 };
 

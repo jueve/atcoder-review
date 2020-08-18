@@ -1,6 +1,8 @@
-export interface UpdateDatabaseLog {
-  contests: number;
-  problems: number;
-  problem_models: number;
-  user_submissions: number;
+type LastUpdate = number | null;
+
+export interface DatabaseUpdateLog {
+  contests: LastUpdate;
+  problems: LastUpdate;
+  problemModels: LastUpdate;
+  userSubmissions: LastUpdate;
 }

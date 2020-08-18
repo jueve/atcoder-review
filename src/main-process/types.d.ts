@@ -25,8 +25,8 @@ export interface Config {
 export interface DatabaseUpdateLog {
   contests: number | null;
   problems: number | null;
-  problem_models: number | null;
-  user_submissions: number | null;
+  problemModels: number | null;
+  userSubmissions: number | null;
 }
 
 export interface Log {

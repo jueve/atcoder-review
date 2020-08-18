@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { ipcMain } from "electron";
-import { UpdateDatabaseLog } from "../types";
+import { DatabaseUpdateLog } from "../types";
 import { resolvePath } from "../../resolvePath";
 import { DATABASE_UPDATE_LOG } from "../../constants";
 
@@ -14,18 +14,18 @@ export const getLog = (
   succeeded: GetLog,
   failed: GetLog
 ): void => {
-  const init: UpdateDatabaseLog = {
-    contests: Number.MIN_SAFE_INTEGER,
-    problems: Number.MIN_SAFE_INTEGER,
-    problem_models: Number.MIN_SAFE_INTEGER,
-    user_submissions: Number.MIN_SAFE_INTEGER,
+  const init: DatabaseUpdateLog = {
+    contests: null,
+    problems: null,
+    problemModels: null,
+    userSubmissions: null,
   };
   const log = resolvePath(DATABASE_UPDATE_LOG);
   ipcMain.on(begin, (event) => {
     try {
       if (fs.existsSync(log)) {
         fs.readFile(log, (_error, data: Buffer) => {
-          const schema: UpdateDatabaseLog = JSON.parse(data.toString());
+          const schema: DatabaseUpdateLog = JSON.parse(data.toString());
           event.reply(succeeded, schema);
         });
       } else {

@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { Done, Report, Update } from "@material-ui/icons";
 import { Context as DatabaseUpdateContext } from "./Context";
-import { UpdateStatus } from "./types";
+import { LastUpdate, UpdateStatus } from "./types";
 import moment from "moment";
 
 const Icon = (status: UpdateStatus): JSX.Element => {
@@ -54,8 +54,8 @@ export function UpdateList(): JSX.Element {
     updateProblemModels,
   } = useContext(DatabaseUpdateContext);
 
-  const showLocalTime = (updateEpochSecond: number): string => {
-    if (updateEpochSecond === Number.MIN_SAFE_INTEGER) {
+  const showLocalTime = (updateEpochSecond: LastUpdate): string => {
+    if (updateEpochSecond === null) {
       return "?";
     } else {
       return moment(updateEpochSecond * 1000)

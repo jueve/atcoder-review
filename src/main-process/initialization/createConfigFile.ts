@@ -21,36 +21,36 @@ const message: Record<string, string> = {
 };
 
 const init: Config = {
-  user_id: null,
-  switch_to_collect: {
+  userId: null,
+  switchToCollect: {
     abc: true,
     arc: true,
     agc: true,
     joi: true,
     past: true,
     jag: true,
-    other_rated: true,
-    other_unrated: true,
+    otherRated: true,
+    otherUnrated: true,
   },
-  user_submissions: {
-    length_of_days: 365,
-    length_of_submissions: 5000,
+  userSubmissions: {
+    lengthOfDays: 365,
+    lengthOfSubmissions: 5000,
   },
 };
 
 const propertiesFullFilled = (config: Config): boolean => {
   return (
-    config.user_id !== undefined &&
-    config.user_submissions.length_of_submissions !== undefined &&
-    config.user_submissions.length_of_days !== undefined &&
-    config.switch_to_collect.abc !== undefined &&
-    config.switch_to_collect.arc !== undefined &&
-    config.switch_to_collect.agc !== undefined &&
-    config.switch_to_collect.joi !== undefined &&
-    config.switch_to_collect.past !== undefined &&
-    config.switch_to_collect.jag !== undefined &&
-    config.switch_to_collect.other_rated !== undefined &&
-    config.switch_to_collect.other_unrated !== undefined
+    config.userId !== undefined &&
+    config.userSubmissions.lengthOfSubmissions !== undefined &&
+    config.userSubmissions.lengthOfDays !== undefined &&
+    config.switchToCollect.abc !== undefined &&
+    config.switchToCollect.arc !== undefined &&
+    config.switchToCollect.agc !== undefined &&
+    config.switchToCollect.joi !== undefined &&
+    config.switchToCollect.past !== undefined &&
+    config.switchToCollect.jag !== undefined &&
+    config.switchToCollect.otherRated !== undefined &&
+    config.switchToCollect.otherUnrated !== undefined
   );
 };
 

@@ -30,23 +30,17 @@ const useStyles = makeStyles((theme: Theme) =>
  */
 export function Actions() {
   const classes = useStyles();
-  const {
-    contests,
-    problems,
-    problemModels,
-    userSubmissions,
-    updateAll,
-  } = useContext(DatabaseUpdateContext);
+  const { databaseUpdate, updateAll } = useContext(DatabaseUpdateContext);
   const history = useHistory();
 
   const anyButtonPressed = useMemo(() => {
     return (
-      contests.progress === "UPDATING" ||
-      problems.progress === "UPDATING" ||
-      problemModels.progress === "UPDATING" ||
-      userSubmissions.progress === "UPDATING"
+      databaseUpdate.contests.progress === "UPDATING" ||
+      databaseUpdate.problems.progress === "UPDATING" ||
+      databaseUpdate.problemModels.progress === "UPDATING" ||
+      databaseUpdate.userSubmissions.progress === "UPDATING"
     );
-  }, [contests, problems, problemModels, userSubmissions]);
+  }, [databaseUpdate]);
 
   return (
     <Grid container justify="space-between">

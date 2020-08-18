@@ -10,10 +10,10 @@ import {
 } from "@material-ui/core";
 import { Done, Report, Update } from "@material-ui/icons";
 import { Context as DatabaseUpdateContext } from "./Context";
-import { FetchStatus } from "./types";
+import { UpdateStatus } from "./types";
 import moment from "moment";
 
-const Icon = (status: FetchStatus): JSX.Element => {
+const Icon = (status: UpdateStatus): JSX.Element => {
   switch (status.progress) {
     case "STANDS_BY":
       return (
@@ -47,10 +47,7 @@ const Icon = (status: FetchStatus): JSX.Element => {
  */
 export function UpdateList(): JSX.Element {
   const {
-    contests,
-    problems,
-    problemModels,
-    userSubmissions,
+    databaseUpdate,
     updateContests,
     updateProblems,
     updateUserSubmissions,
@@ -71,16 +68,18 @@ export function UpdateList(): JSX.Element {
     <List>
       <ListItem>
         <ListItemIcon>
-          <Icon {...contests} />
+          <Icon {...databaseUpdate.contests} />
         </ListItemIcon>
         <ListItemText
           primary="Contests (e.g. title, start date)"
-          secondary={`Last updated: ${showLocalTime(contests.lastUpdate)}`}
+          secondary={`Last updated: ${showLocalTime(
+            databaseUpdate.contests.lastUpdate
+          )}`}
         />
         <Button
           variant="outlined"
           color="primary"
-          disabled={contests.progress === "UPDATING"}
+          disabled={databaseUpdate.contests.progress === "UPDATING"}
           onClick={updateContests}
         >
           UPDATE
@@ -89,16 +88,18 @@ export function UpdateList(): JSX.Element {
 
       <ListItem>
         <ListItemIcon>
-          <Icon {...problems} />
+          <Icon {...databaseUpdate.problems} />
         </ListItemIcon>
         <ListItemText
           primary="Problems (e.g. title, contest id)"
-          secondary={`Last updated: ${showLocalTime(problems.lastUpdate)}`}
+          secondary={`Last updated: ${showLocalTime(
+            databaseUpdate.problems.lastUpdate
+          )}`}
         />
         <Button
           variant="outlined"
           color="primary"
-          disabled={problems.progress === "UPDATING"}
+          disabled={databaseUpdate.problems.progress === "UPDATING"}
           onClick={updateProblems}
         >
           UPDATE
@@ -107,16 +108,18 @@ export function UpdateList(): JSX.Element {
 
       <ListItem>
         <ListItemIcon>
-          <Icon {...problemModels} />
+          <Icon {...databaseUpdate.problemModels} />
         </ListItemIcon>
         <ListItemText
           primary="Problem Models (e.g. difficulty)"
-          secondary={`Last updated: ${showLocalTime(problemModels.lastUpdate)}`}
+          secondary={`Last updated: ${showLocalTime(
+            databaseUpdate.problemModels.lastUpdate
+          )}`}
         />
         <Button
           variant="outlined"
           color="primary"
-          disabled={problemModels.progress === "UPDATING"}
+          disabled={databaseUpdate.problemModels.progress === "UPDATING"}
           onClick={updateProblemModels}
         >
           UPDATE
@@ -125,18 +128,18 @@ export function UpdateList(): JSX.Element {
 
       <ListItem>
         <ListItemIcon>
-          <Icon {...userSubmissions} />
+          <Icon {...databaseUpdate.userSubmissions} />
         </ListItemIcon>
         <ListItemText
           primary="User Submissions (e.g. submission date, problem id)"
           secondary={`Last updated: ${showLocalTime(
-            userSubmissions.lastUpdate
+            databaseUpdate.userSubmissions.lastUpdate
           )}`}
         />
         <Button
           variant="outlined"
           color="primary"
-          disabled={userSubmissions.progress === "UPDATING"}
+          disabled={databaseUpdate.userSubmissions.progress === "UPDATING"}
           onClick={updateUserSubmissions}
         >
           UPDATE

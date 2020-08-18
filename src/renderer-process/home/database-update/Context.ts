@@ -1,12 +1,9 @@
 import { createContext } from "react";
-import { FetchStatus } from "./types";
+import { DatabaseUpdate } from "./types";
 import { NotificationWithMessage } from "../types";
 
 interface C {
-  contests: FetchStatus;
-  problems: FetchStatus;
-  problemModels: FetchStatus;
-  userSubmissions: FetchStatus;
+  databaseUpdate: DatabaseUpdate;
   updateContests: () => void;
   updateProblems: () => void;
   updateProblemModels: () => void;
@@ -16,16 +13,15 @@ interface C {
   closeNotification: () => void;
 }
 
-const init: FetchStatus = {
-  lastUpdate: 0,
-  progress: "STANDS_BY",
+const init: DatabaseUpdate = {
+  contests: { lastUpdate: null, progress: "STANDS_BY" },
+  problems: { lastUpdate: null, progress: "STANDS_BY" },
+  problemModels: { lastUpdate: null, progress: "STANDS_BY" },
+  userSubmissions: { lastUpdate: null, progress: "STANDS_BY" },
 };
 
 export const Context = createContext<C>({
-  contests: init,
-  problems: init,
-  problemModels: init,
-  userSubmissions: init,
+  databaseUpdate: init,
   updateContests: () => {
     return;
   },

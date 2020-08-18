@@ -1,6 +1,12 @@
 import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
-import React, { useCallback, useEffect, useState, useMemo } from "react";
-import { FetchStatus } from "./types";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+  useReducer,
+} from "react";
+import { DatabaseUpdate } from "./types";
 import { NotificationWithMessage } from "../types";
 import { ipcRenderer } from "electron";
 import {
@@ -23,11 +29,6 @@ import {
   UPDATE_USER_SUBMISSIONS_FAILED,
   UPDATE_USER_SUBMISSIONS_SUCCEEDED,
 } from "../../../main-process/database/fetch/updateUserSubmission";
-import { Context as DatabaseUpdateContext } from "./Context";
-import { UpdateList } from "./UpdateList";
-import { Actions } from "./Actions";
-import { Notification } from "./Notification";
-import { BASE_WIDTH } from "../../../theme/layout";
 import {
   GET_LOG_SUCCEEDED,
   GET_LOG_FAILED,
@@ -37,8 +38,14 @@ import {
   UPDATE_LOG_SUCCEEDED,
   UPDATE_LOG_FAILED,
 } from "../../../main-process/log/database-update/updateLog";
+import { Context as DatabaseUpdateContext } from "./Context";
+import { UpdateList } from "./UpdateList";
+import { Actions } from "./Actions";
+import { Notification } from "./Notification";
+import { BASE_WIDTH } from "../../../theme/layout";
 import { UpdateDatabaseLog } from "../../../main-process/log/types";
 import moment from "moment";
+import { reducer } from "./reducer";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,27 +65,19 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const getCurrentEpochSecond = (): number => moment().unix();
 
+const init: DatabaseUpdate = {
+  contests: { lastUpdate: null, progress: "STANDS_BY" },
+  problems: { lastUpdate: null, progress: "STANDS_BY" },
+  problemModels: { lastUpdate: null, progress: "STANDS_BY" },
+  userSubmissions: { lastUpdate: null, progress: "STANDS_BY" },
+};
+
 /**
  *
  */
 export function Entry(): JSX.Element {
   const classes = useStyles();
-  const [contests, setContests] = useState<FetchStatus>({
-    lastUpdate: 0,
-    progress: "STANDS_BY",
-  });
-  const [problems, setProblems] = useState<FetchStatus>({
-    lastUpdate: 0,
-    progress: "STANDS_BY",
-  });
-  const [problemModels, setProblemModels] = useState<FetchStatus>({
-    lastUpdate: 0,
-    progress: "STANDS_BY",
-  });
-  const [userSubmissions, setUserSubmissions] = useState<FetchStatus>({
-    lastUpdate: 0,
-    progress: "STANDS_BY",
-  });
+  const [databaseUpdate, dispatchToDatabaseUpdate] = useReducer(reducer, init);
   const [notification, setNotification] = useState<NotificationWithMessage>({
     open: false,
     status: "success",
@@ -86,50 +85,67 @@ export function Entry(): JSX.Element {
   });
 
   const updateContests = useCallback(() => {
-    setContests({ ...contests, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_CONTESTS);
+    dispatchToDatabaseUpdate({
+      destination: "CONTESTS",
+      progress: "UPDATING",
+      lastUpdate: databaseUpdate.contests.lastUpdate,
+    });
     setNotification({
       open: true,
       status: "info",
       message: "Trying to update contests...",
     });
-  }, [setContests, contests, setNotification]);
+  }, [dispatchToDatabaseUpdate, databaseUpdate, setNotification]);
 
   const updateProblems = useCallback(() => {
-    setProblems({ ...problems, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_PROBLEMS);
+    dispatchToDatabaseUpdate({
+      destination: "PROBLEMS",
+      progress: "UPDATING",
+      lastUpdate: databaseUpdate.problems.lastUpdate,
+    });
     setNotification({
       open: true,
       status: "info",
       message: "Trying to update problems...",
     });
-  }, [problems, setProblems, setNotification]);
+  }, [dispatchToDatabaseUpdate, databaseUpdate, setNotification]);
 
   const updateProblemModels = useCallback(() => {
-    setProblemModels({ ...problemModels, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_PROBLEM_MODELS);
+    dispatchToDatabaseUpdate({
+      destination: "PROBLEM_MODELS",
+      progress: "UPDATING",
+      lastUpdate: databaseUpdate.problemModels.lastUpdate,
+    });
     setNotification({
       open: true,
       status: "info",
       message: "Trying to update problem models...",
     });
-  }, [setProblemModels, problemModels, setNotification]);
+  }, [dispatchToDatabaseUpdate, databaseUpdate, setNotification]);
 
   const updateUserSubmissions = useCallback(() => {
-    setUserSubmissions({ ...userSubmissions, progress: "UPDATING" });
     ipcRenderer.send(UPDATE_USER_SUBMISSIONS);
+    dispatchToDatabaseUpdate({
+      destination: "USER_SUBMISSIONS",
+      progress: "UPDATING",
+      lastUpdate: databaseUpdate.userSubmissions.lastUpdate,
+    });
     setNotification({
       open: true,
       status: "info",
       message: "Trying to update user submissions...",
     });
-  }, [setUserSubmissions, userSubmissions, setNotification]);
+  }, [dispatchToDatabaseUpdate, databaseUpdate, setNotification]);
 
   const updateAll = useCallback(() => {
-    setContests({ ...contests, progress: "UPDATING" });
-    setProblems({ ...problems, progress: "UPDATING" });
-    setProblemModels({ ...problemModels, progress: "UPDATING" });
-    setUserSubmissions({ ...userSubmissions, progress: "UPDATING" });
+    dispatchToDatabaseUpdate({
+      destination: "ALL",
+      progress: "UPDATING",
+      lastUpdate: getCurrentEpochSecond(),
+    });
     ipcRenderer.send(UPDATE_CONTESTS);
     ipcRenderer.send(UPDATE_PROBLEM_MODELS);
     ipcRenderer.send(UPDATE_PROBLEMS);
@@ -139,25 +155,16 @@ export function Entry(): JSX.Element {
       status: "info",
       message: "Trying to update the local database...",
     });
-  }, [
-    contests,
-    problems,
-    problemModels,
-    userSubmissions,
-    setContests,
-    setProblems,
-    setProblemModels,
-    setUserSubmissions,
-  ]);
+  }, [dispatchToDatabaseUpdate]);
 
   const getLastUpdate = useMemo(() => {
     return {
-      contests: contests.lastUpdate,
-      problems: problems.lastUpdate,
-      problemModels: problemModels.lastUpdate,
-      userSubmissions: userSubmissions.lastUpdate,
+      contests: databaseUpdate.contests.lastUpdate,
+      problems: databaseUpdate.problems.lastUpdate,
+      problemModels: databaseUpdate.problemModels.lastUpdate,
+      userSubmissions: databaseUpdate.userSubmissions.lastUpdate,
     };
-  }, [contests, problems, problemModels, userSubmissions]);
+  }, [databaseUpdate]);
 
   const closetNotification = useCallback(() => {
     setNotification({ ...notification, open: false });
@@ -165,32 +172,40 @@ export function Entry(): JSX.Element {
 
   useEffect(() => {
     let mounted = true;
-    ipcRenderer.on(GET_LOG_SUCCEEDED, (_event, fetchLog: UpdateDatabaseLog) => {
-      if (mounted) {
-        setContests({ ...contests, lastUpdate: fetchLog.contests });
-        setProblems({ ...problems, lastUpdate: fetchLog.problems });
-        setProblemModels({
-          ...problemModels,
-          lastUpdate: fetchLog.problem_models,
-        });
-        setUserSubmissions({
-          ...userSubmissions,
-          lastUpdate: fetchLog.user_submissions,
-        });
+    ipcRenderer.on(
+      GET_LOG_SUCCEEDED,
+      (_event, updateLog: UpdateDatabaseLog) => {
+        if (mounted) {
+          dispatchToDatabaseUpdate({
+            destination: "CONTESTS",
+            lastUpdate: updateLog.contests,
+            progress: "STANDS_BY",
+          });
+          dispatchToDatabaseUpdate({
+            destination: "PROBLEMS",
+            lastUpdate: updateLog.problems,
+            progress: "STANDS_BY",
+          });
+          dispatchToDatabaseUpdate({
+            destination: "PROBLEM_MODELS",
+            lastUpdate: updateLog.problem_models,
+            progress: "STANDS_BY",
+          });
+          dispatchToDatabaseUpdate({
+            destination: "USER_SUBMISSIONS",
+            lastUpdate: updateLog.user_submissions,
+            progress: "STANDS_BY",
+          });
+        }
       }
-    });
+    );
 
     ipcRenderer.on(GET_LOG_FAILED, (_event, fetchLog: UpdateDatabaseLog) => {
       if (mounted) {
-        setContests({ ...contests, lastUpdate: fetchLog.contests });
-        setProblems({ ...problems, lastUpdate: fetchLog.problems });
-        setProblemModels({
-          ...problemModels,
-          lastUpdate: fetchLog.problem_models,
-        });
-        setUserSubmissions({
-          ...userSubmissions,
-          lastUpdate: fetchLog.user_submissions,
+        setNotification({
+          open: true,
+          status: "error",
+          message: "Failed to get database update log.",
         });
       }
     });
@@ -200,11 +215,15 @@ export function Entry(): JSX.Element {
         const current = getCurrentEpochSecond();
         ipcRenderer.send(UPDATE_LOG, {
           contests: current,
-          problems: problems.lastUpdate,
-          problem_models: problemModels.lastUpdate,
-          user_submissions: userSubmissions.lastUpdate,
+          problems: databaseUpdate.problems.lastUpdate,
+          problem_models: databaseUpdate.problemModels.lastUpdate,
+          user_submissions: databaseUpdate.userSubmissions.lastUpdate,
         });
-        setContests({ lastUpdate: current, progress: "SUCCEEDED" });
+        dispatchToDatabaseUpdate({
+          destination: "CONTESTS",
+          lastUpdate: current,
+          progress: "SUCCEEDED",
+        });
         setNotification({
           open: true,
           status: "success",
@@ -215,7 +234,11 @@ export function Entry(): JSX.Element {
 
     ipcRenderer.on(UPDATE_CONTESTS_FAILED, (_event) => {
       if (mounted) {
-        setContests({ ...contests, progress: "FAILED" });
+        dispatchToDatabaseUpdate({
+          destination: "CONTESTS",
+          lastUpdate: null,
+          progress: "FAILED",
+        });
         setNotification({
           open: true,
           status: "error",
@@ -228,12 +251,16 @@ export function Entry(): JSX.Element {
       if (mounted) {
         const current = getCurrentEpochSecond();
         ipcRenderer.send(UPDATE_LOG, {
-          contests: contests.lastUpdate,
+          contests: databaseUpdate.contests.lastUpdate,
           problems: current,
-          problem_models: problemModels.lastUpdate,
-          user_submissions: userSubmissions.lastUpdate,
+          problem_models: databaseUpdate.problemModels.lastUpdate,
+          user_submissions: databaseUpdate.userSubmissions.lastUpdate,
         });
-        setProblems({ lastUpdate: current, progress: "SUCCEEDED" });
+        dispatchToDatabaseUpdate({
+          destination: "PROBLEMS",
+          lastUpdate: current,
+          progress: "SUCCEEDED",
+        });
         setNotification({
           open: true,
           status: "success",
@@ -244,7 +271,11 @@ export function Entry(): JSX.Element {
 
     ipcRenderer.on(UPDATE_PROBLEMS_FAILED, (_event) => {
       if (mounted) {
-        setProblems({ ...problems, progress: "FAILED" });
+        dispatchToDatabaseUpdate({
+          destination: "PROBLEMS",
+          lastUpdate: null,
+          progress: "FAILED",
+        });
         setNotification({
           open: true,
           status: "error",
@@ -257,12 +288,16 @@ export function Entry(): JSX.Element {
       if (mounted) {
         const current = getCurrentEpochSecond();
         ipcRenderer.send(UPDATE_LOG, {
-          contests: contests.lastUpdate,
-          problems: problems.lastUpdate,
-          problem_models: current,
-          user_submissions: userSubmissions.lastUpdate,
+          contests: databaseUpdate.contests.lastUpdate,
+          problems: databaseUpdate.problems.lastUpdate,
+          problem_models: databaseUpdate.problemModels.lastUpdate,
+          user_submissions: databaseUpdate.userSubmissions.lastUpdate,
         });
-        setProblemModels({ lastUpdate: current, progress: "SUCCEEDED" });
+        dispatchToDatabaseUpdate({
+          destination: "PROBLEM_MODELS",
+          lastUpdate: current,
+          progress: "SUCCEEDED",
+        });
         setNotification({
           open: true,
           status: "success",
@@ -273,7 +308,11 @@ export function Entry(): JSX.Element {
 
     ipcRenderer.on(UPDATE_PROBLEM_MODELS_FAILED, (_event) => {
       if (mounted) {
-        setProblemModels({ ...problemModels, progress: "FAILED" });
+        dispatchToDatabaseUpdate({
+          destination: "PROBLEM_MODELS",
+          lastUpdate: null,
+          progress: "FAILED",
+        });
         setNotification({
           open: true,
           status: "error",
@@ -286,43 +325,56 @@ export function Entry(): JSX.Element {
       if (mounted) {
         const current = getCurrentEpochSecond();
         ipcRenderer.send(UPDATE_LOG, {
-          contests: contests.lastUpdate,
-          problems: problems.lastUpdate,
-          problem_models: problemModels.lastUpdate,
+          contests: databaseUpdate.contests.lastUpdate,
+          problems: databaseUpdate.problems.lastUpdate,
+          problem_models: databaseUpdate.problemModels.lastUpdate,
           user_submissions: current,
         });
-        setUserSubmissions({ lastUpdate: current, progress: "SUCCEEDED" });
+        dispatchToDatabaseUpdate({
+          destination: "USER_SUBMISSIONS",
+          lastUpdate: current,
+          progress: "SUCCEEDED",
+        });
         setNotification({
           open: true,
           status: "success",
-          message: "Succeeded to update user submission.",
+          message: "Succeeded to update user submissions.",
         });
       }
     });
 
     ipcRenderer.on(UPDATE_USER_SUBMISSIONS_FAILED, (_event) => {
       if (mounted) {
-        setUserSubmissions({ ...userSubmissions, progress: "FAILED" });
+        dispatchToDatabaseUpdate({
+          destination: "USER_SUBMISSIONS",
+          lastUpdate: null,
+          progress: "FAILED",
+        });
         setNotification({
           open: true,
           status: "error",
-          message: "Failed to update user submission.",
+          message: "Failed to update user submissions.",
         });
       }
+    });
+
+    ipcRenderer.on(UPDATE_LOG_FAILED, (_event) => {
+      setNotification({
+        open: true,
+        status: "error",
+        message: "Failed to update log.",
+      });
     });
 
     return () => {
       mounted = false;
     };
-  }, [contests, problems, problemModels, userSubmissions, getLastUpdate]);
+  }, [databaseUpdate, dispatchToDatabaseUpdate, getLastUpdate]);
 
   return (
     <DatabaseUpdateContext.Provider
       value={{
-        contests: contests,
-        problems: problems,
-        problemModels: problemModels,
-        userSubmissions: userSubmissions,
+        databaseUpdate: databaseUpdate,
         updateContests: updateContests,
         updateProblems: updateProblems,
         updateProblemModels: updateProblemModels,

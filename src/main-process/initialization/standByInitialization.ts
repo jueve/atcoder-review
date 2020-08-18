@@ -1,0 +1,62 @@
+import {
+  createBaseDirectory,
+  CREATE_BASE_DIRECTORY,
+  CREATE_BASE_DIRECTORY_SUCCEEDED,
+  CREATE_BASE_DIRECTORY_FAILED,
+} from "./createBaseDirectory";
+import {
+  createDatabaseUpdateLogFile,
+  CREATE_DATABASE_UPDATE_LOG_FILE,
+  CREATE_DATABASE_UPDATE_LOG_FILE_SUCCEEDED,
+  CREATE_DATABASE_UPDATE_LOG_FILE_FAILED,
+} from "./createDatabaseUpdateLogFile";
+import {
+  createLogFile,
+  CREATE_LOG_FILE,
+  CREATE_LOG_FILE_SUCCEEDED,
+  CREATE_LOG_FILE_FAILED,
+} from "./createLogFile";
+import {
+  createConfigFile,
+  CREATE_CONFIG_FILE,
+  CREATE_CONFIG_FILE_SUCCEEDED,
+  CREATE_CONFIG_FILE_FAILED,
+} from "./createConfigFile";
+import {
+  createDatabaseTables,
+  CREATE_DATABASE_TABLES,
+  CREATE_DATABASE_TABLES_SUCCEEDED,
+  CREATE_DATABASE_TABLES_FAILED,
+} from "./createDatabaseTables";
+
+export const standByInitialization = (): void => {
+  createBaseDirectory(
+    CREATE_BASE_DIRECTORY,
+    CREATE_BASE_DIRECTORY_SUCCEEDED,
+    CREATE_BASE_DIRECTORY_FAILED
+  );
+
+  createConfigFile(
+    CREATE_CONFIG_FILE,
+    CREATE_CONFIG_FILE_SUCCEEDED,
+    CREATE_CONFIG_FILE_FAILED
+  );
+
+  createLogFile(
+    CREATE_LOG_FILE,
+    CREATE_LOG_FILE_SUCCEEDED,
+    CREATE_LOG_FILE_FAILED
+  );
+
+  createDatabaseUpdateLogFile(
+    CREATE_DATABASE_UPDATE_LOG_FILE,
+    CREATE_DATABASE_UPDATE_LOG_FILE_SUCCEEDED,
+    CREATE_DATABASE_UPDATE_LOG_FILE_FAILED
+  );
+
+  createDatabaseTables(
+    CREATE_DATABASE_TABLES,
+    CREATE_DATABASE_TABLES_SUCCEEDED,
+    CREATE_DATABASE_TABLES_FAILED
+  );
+};

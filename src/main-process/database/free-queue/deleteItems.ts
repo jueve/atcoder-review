@@ -1,6 +1,6 @@
 import { TableName } from "../TableName";
 import { ipcMain } from "electron";
-import database from "../../../database";
+import { database } from "../../database";
 import { Item } from "../../../defines/Item";
 
 type DeleteItems =

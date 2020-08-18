@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { FetchStatus } from "./types";
-import { NotificationWithMessage } from "../wrapper/types";
+import { NotificationWithMessage } from "../types";
 
 interface C {
   contests: FetchStatus;

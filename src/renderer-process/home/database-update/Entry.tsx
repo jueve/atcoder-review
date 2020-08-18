@@ -1,7 +1,7 @@
 import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
 import React, { useCallback, useEffect, useState, useMemo } from "react";
 import { FetchStatus } from "./types";
-import { NotificationWithMessage } from "../wrapper/types";
+import { NotificationWithMessage } from "../types";
 import { ipcRenderer } from "electron";
 import {
   UPDATE_CONTESTS,

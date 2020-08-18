@@ -1,6 +1,6 @@
 export interface UpdateDatabaseLog {
   contests: number;
   problems: number;
-  problemModels: number;
-  userSubmissions: number;
+  problem_models: number;
+  user_submissions: number;
 }

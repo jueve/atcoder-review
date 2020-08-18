@@ -169,10 +169,13 @@ export function Entry(): JSX.Element {
       if (mounted) {
         setContests({ ...contests, lastUpdate: fetchLog.contests });
         setProblems({ ...problems, lastUpdate: fetchLog.problems });
-        setProblemModels({ ...problemModels, lastUpdate: fetchLog.problems });
+        setProblemModels({
+          ...problemModels,
+          lastUpdate: fetchLog.problem_models,
+        });
         setUserSubmissions({
           ...userSubmissions,
-          lastUpdate: fetchLog.userSubmissions,
+          lastUpdate: fetchLog.user_submissions,
         });
       }
     });
@@ -181,10 +184,13 @@ export function Entry(): JSX.Element {
       if (mounted) {
         setContests({ ...contests, lastUpdate: fetchLog.contests });
         setProblems({ ...problems, lastUpdate: fetchLog.problems });
-        setProblemModels({ ...problemModels, lastUpdate: fetchLog.problems });
+        setProblemModels({
+          ...problemModels,
+          lastUpdate: fetchLog.problem_models,
+        });
         setUserSubmissions({
           ...userSubmissions,
-          lastUpdate: fetchLog.userSubmissions,
+          lastUpdate: fetchLog.user_submissions,
         });
       }
     });
@@ -193,8 +199,10 @@ export function Entry(): JSX.Element {
       if (mounted) {
         const current = getCurrentEpochSecond();
         ipcRenderer.send(UPDATE_LOG, {
-          ...getLastUpdate,
           contests: current,
+          problems: problems.lastUpdate,
+          problem_models: problemModels.lastUpdate,
+          user_submissions: userSubmissions.lastUpdate,
         });
         setContests({ lastUpdate: current, progress: "SUCCEEDED" });
         setNotification({
@@ -220,8 +228,10 @@ export function Entry(): JSX.Element {
       if (mounted) {
         const current = getCurrentEpochSecond();
         ipcRenderer.send(UPDATE_LOG, {
-          ...getLastUpdate,
+          contests: contests.lastUpdate,
           problems: current,
+          problem_models: problemModels.lastUpdate,
+          user_submissions: userSubmissions.lastUpdate,
         });
         setProblems({ lastUpdate: current, progress: "SUCCEEDED" });
         setNotification({
@@ -247,8 +257,10 @@ export function Entry(): JSX.Element {
       if (mounted) {
         const current = getCurrentEpochSecond();
         ipcRenderer.send(UPDATE_LOG, {
-          ...getLastUpdate,
-          problemModels: current,
+          contests: contests.lastUpdate,
+          problems: problems.lastUpdate,
+          problem_models: current,
+          user_submissions: userSubmissions.lastUpdate,
         });
         setProblemModels({ lastUpdate: current, progress: "SUCCEEDED" });
         setNotification({
@@ -274,8 +286,10 @@ export function Entry(): JSX.Element {
       if (mounted) {
         const current = getCurrentEpochSecond();
         ipcRenderer.send(UPDATE_LOG, {
-          ...getLastUpdate,
-          userSubmissions: current,
+          contests: contests.lastUpdate,
+          problems: problems.lastUpdate,
+          problem_models: problemModels.lastUpdate,
+          user_submissions: current,
         });
         setUserSubmissions({ lastUpdate: current, progress: "SUCCEEDED" });
         setNotification({

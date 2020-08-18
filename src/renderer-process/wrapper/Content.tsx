@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { Entry as HomeEntry } from "../home/wrapper/Entry";
 import { Entry as DatabaseUpdate } from "../home/database-update/Entry";
-import { Entry as UpdateUserId } from "../home/update-user-id/Entry";
+import { Entry as UpdateUserId } from "../home/user-id-update/Entry";
 import { Entry as FreeQueue } from "../free/wrapper/Entry";
 
 /**

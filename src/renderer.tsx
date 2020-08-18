@@ -36,6 +36,7 @@ import { CREATE_CONFIG_FILE } from "./main-process/initialization/createConfigFi
 import { CREATE_DATABASE_UPDATE_LOG_FILE } from "./main-process/initialization/createDatabaseUpdateLogFile";
 import { CREATE_LOG_FILE } from "./main-process/initialization/createLogFile";
 import { CREATE_DATABASE_TABLES } from "./main-process/initialization/createDatabaseTables";
+import { initialize } from "./initialize";
 
 const root = document.createElement("div");
 const fontIcons = document.createElement("link");
@@ -73,8 +74,4 @@ const renderApplication = async (): Promise<void> => {
 };
 
 renderApplication();
-ipcRenderer.send(CREATE_BASE_DIRECTORY);
-ipcRenderer.send(CREATE_CONFIG_FILE);
-ipcRenderer.send(CREATE_DATABASE_UPDATE_LOG_FILE);
-ipcRenderer.send(CREATE_LOG_FILE);
-ipcRenderer.send(CREATE_DATABASE_TABLES);
+initialize();

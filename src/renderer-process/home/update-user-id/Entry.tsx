@@ -11,11 +11,12 @@ import {
   UPDATE_USER_ID_FAILED,
 } from "../../../main-process/config/user-id/updateUserId";
 import { BASE_WIDTH } from "../../../theme/layout";
+import { NotificationWithMessage } from "../types";
 import { UserId } from "./types";
 import { Context as UpdateUserIdContext } from "./Context";
 import { UserIdInput } from "./UserIdInput";
 import { Actions } from "./Actions";
-import { NotificationWithMessage } from "../wrapper/types";
+
 import { Notification } from "./Notification";
 
 const useStyles = makeStyles((theme: Theme) =>

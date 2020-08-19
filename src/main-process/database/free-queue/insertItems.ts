@@ -21,15 +21,21 @@ export const insertItems = (
 ): void => {
   ipcMain.on(begin, (event, fqis: Array<FreeQueueItem>): void => {
     try {
+      const l: number = fqis.length;
       fqis.forEach((fqi) => {
         database(freeQueue)
           .insert(fqi)
-          .then((res) => res)
-          .catch((res) => {
+          .then((res: Array<number>) => {
+            // 'l == 0' means that you insert no items into Free Queue.
+            if (l === 0 || res[0] >= l) {
+              event.reply(succeeded);
+            }
+          })
+          .catch((error) => {
             event.reply(failed);
+            console.log(error);
           });
       });
-      event.reply(succeeded);
     } catch (e) {
       event.reply(failed);
       console.log(e);

@@ -9,7 +9,7 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { TextField, Grid, Button, Typography } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { FQCandidate } from "../wrapper/types";
-import { ClassifiedCandidates, Kinds } from "./types";
+import { ClassifiedCandidates, Kind } from "./types";
 import { List } from "immutable";
 import { createClassifiedCandidates } from "./createClassifiedCandidates";
 import { reducer } from "./reducer";
@@ -46,6 +46,9 @@ const init: ClassifiedCandidates = {
   other_unrated: List<FQCandidate>(),
 };
 
+/**
+ *
+ */
 export function Form(): JSX.Element {
   const classes = useStyles();
   const [classifiedCandidates, setClassifiedCandidates] = useState<
@@ -59,8 +62,16 @@ export function Form(): JSX.Element {
   const [buttonDisable, setButtonDisable] = useState(true);
   const { resetPage } = useContext(FreeQueueContext);
 
+  const classifyOptions = (option: FQCandidate): string => {
+    return option.contest_title;
+  };
+
+  const showOptions = (option: FQCandidate): string => {
+    return option.problem_title;
+  };
+
   const handleAutoCompleteOptionsClick = useCallback(
-    (kind: Kinds, cs: Array<FQCandidate>) => {
+    (kind: Kind, cs: Array<FQCandidate>) => {
       let tmp = true;
       dispatchOnInsert({ mode: "ADD", kind: kind, candidates: List.of(...cs) });
       for (const [_, v] of Object.entries(toInsert)) {
@@ -138,19 +149,18 @@ export function Form(): JSX.Element {
       </Grid>
 
       <Autocomplete
-        key={`insert-free-queue-${counter}`}
+        key={`insert-free-queue-item-${counter}`}
         multiple
         color="primary"
         className={classes.autocomplete}
-        id="free-queue-candidates-auto-complete-of-ABC"
+        id="ABC"
         options={classifiedCandidates.abc.toArray()}
-        groupBy={(option: FQCandidate) => option.contest_title}
-        getOptionLabel={(option: FQCandidate) =>
-          `${option.problem_title} / ${option.contest_title}`
-        }
-        onChange={(_event, cs: Array<FQCandidate>): void => {
-          handleAutoCompleteOptionsClick("ABC", cs);
-        }}
+        groupBy={classifyOptions}
+        getOptionLabel={showOptions}
+        onChange={(
+          _event: React.ChangeEvent<unknown>,
+          cs: Array<FQCandidate>
+        ) => handleAutoCompleteOptionsClick("ABC", cs)}
         renderInput={(params): JSX.Element => (
           <TextField
             {...params}
@@ -162,19 +172,18 @@ export function Form(): JSX.Element {
       />
 
       <Autocomplete
-        key={`insert-free-queue-${counter + 1}`}
+        key={`insert-free-queue-item-${counter + 1}`}
         multiple
         color="primary"
         className={classes.autocomplete}
-        id="free-queue-candidates-auto-complete-of-ARC"
+        id="ARC"
         options={classifiedCandidates.arc.toArray()}
-        groupBy={(option: FQCandidate) => option.contest_title}
-        getOptionLabel={(option: FQCandidate) =>
-          `${option.problem_title} / ${option.contest_title}`
-        }
-        onChange={(_event, cs: Array<FQCandidate>): void => {
-          handleAutoCompleteOptionsClick("ARC", cs);
-        }}
+        groupBy={classifyOptions}
+        getOptionLabel={showOptions}
+        onChange={(
+          _event: React.ChangeEvent<unknown>,
+          cs: Array<FQCandidate>
+        ) => handleAutoCompleteOptionsClick("ARC", cs)}
         renderInput={(params): JSX.Element => (
           <TextField
             {...params}
@@ -186,19 +195,18 @@ export function Form(): JSX.Element {
       />
 
       <Autocomplete
-        key={`insert-free-queue-${counter + 2}`}
+        key={`insert-free-queue-item-${counter + 2}`}
         multiple
         color="primary"
         className={classes.autocomplete}
-        id="free-queue-candidates-auto-complete-of-AGC"
+        id="AGC"
         options={classifiedCandidates.agc.toArray()}
-        groupBy={(option: FQCandidate) => option.contest_title}
-        getOptionLabel={(option: FQCandidate) =>
-          `${option.problem_title} / ${option.contest_title}`
-        }
-        onChange={(_event, cs: Array<FQCandidate>): void => {
-          handleAutoCompleteOptionsClick("AGC", cs);
-        }}
+        groupBy={classifyOptions}
+        getOptionLabel={showOptions}
+        onChange={(
+          _event: React.ChangeEvent<unknown>,
+          cs: Array<FQCandidate>
+        ) => handleAutoCompleteOptionsClick("AGC", cs)}
         renderInput={(params): JSX.Element => (
           <TextField
             {...params}
@@ -210,19 +218,18 @@ export function Form(): JSX.Element {
       />
 
       <Autocomplete
-        key={`insert-free-queue-${counter + 3}`}
+        key={`insert-free-queue-item-${counter + 3}`}
         multiple
         color="primary"
         className={classes.autocomplete}
-        id="free-queue-candidates-auto-complete-of-JOI"
+        id="JOI"
         options={classifiedCandidates.joi.toArray()}
-        groupBy={(option: FQCandidate) => option.contest_title}
-        getOptionLabel={(option: FQCandidate) =>
-          `${option.problem_title} / ${option.contest_title}`
-        }
-        onChange={(_event, cs: Array<FQCandidate>): void => {
-          handleAutoCompleteOptionsClick("JOI", cs);
-        }}
+        groupBy={classifyOptions}
+        getOptionLabel={showOptions}
+        onChange={(
+          _event: React.ChangeEvent<unknown>,
+          cs: Array<FQCandidate>
+        ) => handleAutoCompleteOptionsClick("JOI", cs)}
         renderInput={(params): JSX.Element => (
           <TextField
             {...params}
@@ -234,19 +241,18 @@ export function Form(): JSX.Element {
       />
 
       <Autocomplete
-        key={`insert-free-queue-${counter + 4}`}
+        key={`insert-free-queue-item-${counter + 4}`}
         multiple
         color="primary"
         className={classes.autocomplete}
-        id="free-queue-candidates-auto-complete-of-PAST"
+        id="PAST"
         options={classifiedCandidates.past.toArray()}
-        groupBy={(option: FQCandidate) => option.contest_title}
-        getOptionLabel={(option: FQCandidate) =>
-          `${option.problem_title} / ${option.contest_title}`
-        }
-        onChange={(_event, cs: Array<FQCandidate>): void => {
-          handleAutoCompleteOptionsClick("PAST", cs);
-        }}
+        groupBy={classifyOptions}
+        getOptionLabel={showOptions}
+        onChange={(
+          _event: React.ChangeEvent<unknown>,
+          cs: Array<FQCandidate>
+        ) => handleAutoCompleteOptionsClick("PAST", cs)}
         renderInput={(params): JSX.Element => (
           <TextField
             {...params}
@@ -258,19 +264,18 @@ export function Form(): JSX.Element {
       />
 
       <Autocomplete
-        key={`insert-free-queue-${counter + 5}`}
+        key={`insert-free-queue-item-${counter + 5}`}
         multiple
         color="primary"
         className={classes.autocomplete}
-        id="free-queue-candidates-auto-complete-of-JAG"
+        id="JAG"
         options={classifiedCandidates.jag.toArray()}
-        groupBy={(option: FQCandidate) => option.contest_title}
-        getOptionLabel={(option: FQCandidate) =>
-          `${option.problem_title} / ${option.contest_title}`
-        }
-        onChange={(_event, cs: Array<FQCandidate>): void => {
-          handleAutoCompleteOptionsClick("JAG", cs);
-        }}
+        groupBy={classifyOptions}
+        getOptionLabel={showOptions}
+        onChange={(
+          _event: React.ChangeEvent<unknown>,
+          cs: Array<FQCandidate>
+        ) => handleAutoCompleteOptionsClick("JAG", cs)}
         renderInput={(params): JSX.Element => (
           <TextField
             {...params}
@@ -282,19 +287,18 @@ export function Form(): JSX.Element {
       />
 
       <Autocomplete
-        key={`insert-free-queue-${counter + 6}`}
+        key={`insert-free-queue-item-${counter + 6}`}
         multiple
         color="primary"
         className={classes.autocomplete}
-        id="free-queue-candidates-auto-complete-of-other-rated"
+        id="OTHER_RATED"
         options={classifiedCandidates.other_rated.toArray()}
-        groupBy={(option: FQCandidate) => option.contest_title}
-        getOptionLabel={(option: FQCandidate) =>
-          `${option.problem_title} / ${option.contest_title}`
-        }
-        onChange={(_event, cs: Array<FQCandidate>): void => {
-          handleAutoCompleteOptionsClick("OTHER_RATED", cs);
-        }}
+        groupBy={classifyOptions}
+        getOptionLabel={showOptions}
+        onChange={(
+          _event: React.ChangeEvent<unknown>,
+          cs: Array<FQCandidate>
+        ) => handleAutoCompleteOptionsClick("OTHER_RATED", cs)}
         renderInput={(params): JSX.Element => (
           <TextField
             {...params}
@@ -306,19 +310,18 @@ export function Form(): JSX.Element {
       />
 
       <Autocomplete
-        key={`insert-free-queue-${counter + 7}`}
+        key={`insert-free-queue-item-${counter + 7}`}
         multiple
         color="primary"
         className={classes.autocomplete}
-        id="free-queue-candidates-auto-complete-of-other-unrated"
+        id="OTHER_UNRATED"
         options={classifiedCandidates.other_unrated.toArray()}
-        groupBy={(option: FQCandidate) => option.contest_title}
-        getOptionLabel={(option: FQCandidate) =>
-          `${option.problem_title} / ${option.contest_title}`
-        }
-        onChange={(_event, cs: Array<FQCandidate>): void => {
-          handleAutoCompleteOptionsClick("OTHER_RATED", cs);
-        }}
+        groupBy={classifyOptions}
+        getOptionLabel={showOptions}
+        onChange={(
+          _event: React.ChangeEvent<unknown>,
+          cs: Array<FQCandidate>
+        ) => handleAutoCompleteOptionsClick("OTHER_UNRATED", cs)}
         renderInput={(params): JSX.Element => (
           <TextField
             {...params}

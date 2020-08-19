@@ -2,7 +2,7 @@ import { List } from "immutable";
 import { FQCandidate } from "../wrapper/types";
 
 export type Mode = "ADD" | "CLEAR";
-export type Kinds =
+export type Kind =
   | "ABC"
   | "ARC"
   | "AGC"
@@ -14,7 +14,7 @@ export type Kinds =
 
 export interface ActionOnInsertManipulation {
   mode: Mode;
-  kind?: Kinds;
+  kind?: Kind;
   candidates?: List<FQCandidate>;
 }
 

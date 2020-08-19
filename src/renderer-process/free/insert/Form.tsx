@@ -85,7 +85,9 @@ export function Form(): JSX.Element {
   const handleCancelClick = useCallback(() => {
     setCounter((c) => c + 10);
     resetPage();
-  }, [setCounter, resetPage]);
+    dispatchOnInsert({ mode: "CLEAR" });
+    setButtonDisable(true);
+  }, [setCounter, resetPage, setButtonDisable]);
 
   const handleSubmitClick = useCallback(() => {
     const list = toInsert.abc.concat(

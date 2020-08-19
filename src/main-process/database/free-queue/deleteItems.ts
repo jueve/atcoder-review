@@ -21,11 +21,23 @@ export const deleteItems = (
 ): void => {
   ipcMain.on(begin, (event, items: Array<FreeQueueItem>) => {
     try {
+      const l: number = items.length;
+      let count = 0;
       items.forEach((fqi) => {
         database(freeQueue)
           .where("id", fqi.id)
           .del()
-          .then((res) => res);
+          // 'l == 0' means that you delete no items form Free Queue.
+          .then((res: number) => {
+            count += 1;
+            if (l === 0 || count >= l) {
+              event.reply(succeeded);
+            }
+          })
+          .catch((error) => {
+            event.reply(failed);
+            console.log(error);
+          });
       });
       event.reply(succeeded);
     } catch (e) {

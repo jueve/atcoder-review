@@ -24,8 +24,13 @@ export const updateDoneStatus = (
       database(freeQueue)
         .where({ id: fqi.id })
         .update({ is_done: status })
-        .then((res) => res);
-      event.reply(succeeded);
+        .then((_res) => {
+          event.reply(succeeded);
+        })
+        .catch((error) => {
+          event.reply(failed);
+          console.log(error);
+        });
     } catch (e) {
       event.reply(failed);
       console.log(e);

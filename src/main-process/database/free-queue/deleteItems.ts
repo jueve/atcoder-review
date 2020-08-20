@@ -39,7 +39,6 @@ export const deleteItems = (
             console.log(error);
           });
       });
-      event.reply(succeeded);
     } catch (e) {
       event.reply(failed);
       console.log(e);

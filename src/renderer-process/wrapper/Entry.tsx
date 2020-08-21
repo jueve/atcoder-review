@@ -56,7 +56,7 @@ const init: Initialization = {
 
 const useStyles = makeStyles({
   root: {
-    width: BASE_WIDTH * 12,
+    width: BASE_WIDTH * 15,
   },
   menu: {
     paddingTop: TOP,

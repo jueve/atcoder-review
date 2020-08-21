@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect, useContext } from "react";
 import { useHistory, useParams } from "react-router";
-import { shell } from "electron";
+import { ipcRenderer, shell } from "electron";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -16,6 +16,11 @@ import { updateDoneStatus } from "./updateDoneStatus";
 import { getItem } from "./getItem";
 import { Context as FreeQueueContext } from "../wrapper/Context";
 import moment from "moment";
+import {
+  GET_SINGLE_ITEM_FAILED,
+  GET_SINGLE_ITEM_SUCCEEDED,
+  getSingleItem,
+} from "../../../main-process/database/free-queue/getSingleItem";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -36,11 +41,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+/**
+ *
+ */
 export function ItemDetail(): JSX.Element {
   const classes = useStyles();
   const { resetPage } = useContext(FreeQueueContext);
   const { itemId } = useParams();
-  const [detail, setDetail] = useState<null | FQItem>(() => getItem(itemId));
+  const [detail, setDetail] = useState<null | FQItem>(null);
   const [counter, setCounter] = useState(0);
   const history = useHistory();
 
@@ -76,12 +84,37 @@ export function ItemDetail(): JSX.Element {
     (event: React.ChangeEvent<HTMLInputElement>, fqi: FQItem) => {
       event.stopPropagation();
       updateDoneStatus(event.target.checked, fqi);
-      setDetail(getItem(itemId));
+      getItem(itemId);
       setCounter((c) => c + 1);
       resetPage();
     },
-    [itemId, setCounter, setDetail, resetPage]
+    [itemId, setCounter, resetPage]
   );
+
+  useEffect(() => {
+    let mounted = true;
+    getItem(itemId);
+
+    ipcRenderer.on(GET_SINGLE_ITEM_SUCCEEDED, (_event, fqis) => {
+      if (mounted) {
+        if (fqis === []) {
+          setDetail(null);
+        } else {
+          setDetail(fqis[0]);
+        }
+      }
+    });
+
+    ipcRenderer.on(GET_SINGLE_ITEM_FAILED, (_event, fqis) => {
+      if (mounted) {
+        setDetail(null);
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [itemId]);
 
   return itemId === undefined || detail === null ? (
     <div />

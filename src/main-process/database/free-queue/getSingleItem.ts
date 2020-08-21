@@ -27,7 +27,6 @@ export const getSingleItem = (
           event.reply(succeeded, fqis);
         })
         .catch((_res) => {
-          event.returnValue = [];
           event.reply(failed, []);
         });
     } catch (e) {

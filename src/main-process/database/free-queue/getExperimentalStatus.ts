@@ -40,15 +40,12 @@ export const getExperimentalStatus = (
           } else {
             event.returnValue = rows[0].is_experimental;
           }
-          event.reply(succeeded);
         })
         .catch((_res) => {
           event.returnValue = false;
-          event.reply(failed);
         });
     } catch (e) {
       event.returnValue = false;
-      event.reply(failed);
       console.log(e);
     }
   });

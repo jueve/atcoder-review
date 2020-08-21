@@ -17,3 +17,7 @@ export interface ButtonDisable {
   insert: boolean;
   delete: boolean;
 }
+
+export interface ActionOfButtonDisable {
+  page: Page;
+}

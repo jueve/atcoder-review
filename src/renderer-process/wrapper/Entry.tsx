@@ -57,10 +57,10 @@ const init: Initialization = {
 const useStyles = makeStyles({
   root: {
     width: BASE_WIDTH * 15,
-    marginLeft: BASE_WIDTH * 0.2,
   },
   menu: {
     paddingTop: TOP,
+    paddingLeft: BASE_WIDTH * 0.2,
     maxWidth: BASE_WIDTH * 2,
     flexGrow: 1,
   },

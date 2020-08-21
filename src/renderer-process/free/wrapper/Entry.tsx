@@ -59,7 +59,7 @@ const getItemsToShow = (
  *
  */
 export function Entry(): JSX.Element {
-  const [items, setItems] = useState(() => ipcRenderer.sendSync(GET_ALL_ITEMS));
+  const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [pageLength, setPageLength] = useState(() => getPageLength(items, 5));
   const [toShow, setToShow] = useState([]);
@@ -81,13 +81,8 @@ export function Entry(): JSX.Element {
   );
 
   const resetPage = useCallback(() => {
-    const newItems = getItems();
-    setItems(newItems);
-    setPage(1);
-    setItemsPerPage(itemsPerPage);
-    setPageLength(getPageLength(newItems, itemsPerPage));
-    setToShow(getItemsToShow(page, itemsPerPage, newItems));
-  }, [page, setPageLength, itemsPerPage, setItemsPerPage, setToShow]);
+    getItems();
+  }, []);
 
   const closeNotification = useCallback(() => {
     setNotification({ ...notification, open: false });
@@ -96,7 +91,7 @@ export function Entry(): JSX.Element {
   useEffect(() => {
     let mounted = true;
 
-    ipcRenderer.send(GET_ALL_ITEMS);
+    getItems();
     ipcRenderer.on(GET_ALL_ITEMS_SUCCEEDED, (_, fqis) => {
       if (mounted) {
         setItems(fqis);

@@ -1,7 +1,9 @@
 import { TableName } from "../TableName";
 import { ipcMain } from "electron";
 import { database } from "../../database";
+import { Item } from "../../../defines/Item";
 
+type FQItem = Item.FreeQueueItem;
 type GetAllItems =
   | "GET_ALL_ITEMS"
   | "GET_ALL_ITEMS_SUCCEEDED"
@@ -21,19 +23,15 @@ export const getAllItems = (
     try {
       database(freeQueue)
         .select()
-        .then((fqis) => {
-          const rev = fqis.reverse();
-          event.returnValue = rev;
-          event.reply(succeeded, rev);
+        .then((fqis: Array<FQItem>) => {
+          event.reply(succeeded, fqis.reverse());
         })
-        .catch((_res) => {
-          event.returnValue = [];
+        .catch((error) => {
           event.reply(failed, []);
         });
-    } catch (e) {
-      event.returnValue = [];
+    } catch (error) {
       event.reply(failed, []);
-      console.log(e);
+      console.log(error);
     }
   });
 };

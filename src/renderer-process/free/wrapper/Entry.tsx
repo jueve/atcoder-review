@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState, useReducer } from "react";
 import { Context as FreeQueueContext } from "./Context";
 import { ipcRenderer } from "electron";
 import { FQItem, NotificationWithMessage } from "./types";
-import Content from "./Content";
 import { getItems } from "./getItems";
 import {
   GET_ALL_ITEMS,
@@ -17,6 +16,10 @@ import {
   DELETE_ITEMS_SUCCEEDED,
   DELETE_ITEMS_FAILED,
 } from "../../../main-process/database/free-queue/deleteItems";
+import { Content } from "./Content";
+import { MenuBar } from "./MenuBar";
+import Notification from "../Notification";
+import { Typography } from "@material-ui/core";
 
 /**
  * Calculate page length with the length of 'FQItem's and 'itemPerPage'.
@@ -168,6 +171,11 @@ export function Entry(): JSX.Element {
           closeNotification: closeNotification,
         }}
       >
+        <Notification />
+        <Typography variant="h5" gutterBottom>
+          Free Queue
+        </Typography>
+        <MenuBar />
         <Content />
       </FreeQueueContext.Provider>
     </div>

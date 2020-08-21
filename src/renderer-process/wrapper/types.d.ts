@@ -6,6 +6,19 @@ type Destination =
   | "DATABASE_UPDATE_LOG_FILE"
   | "DATABASE_TABLES";
 
+type Page = "HOME" | "FREE_QUEUE" | "DATE_QUEUE" | "TAG_QUEUE";
+
+export interface ButtonDisable {
+  home: boolean;
+  freeQueue: boolean;
+  dateQueue: boolean;
+  tagQueue: boolean;
+}
+
+export interface ActionOfButtonDisable {
+  page: Page;
+}
+
 interface StatusWithMessage {
   status: Status;
   message: string;

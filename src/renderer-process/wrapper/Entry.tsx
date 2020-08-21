@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { HashRouter as Router } from "react-router-dom";
 import { APPLICATION_THEME } from "../../theme/theme";
 import { BASE_WIDTH, TOP } from "../../theme/layout";
@@ -57,15 +57,17 @@ const init: Initialization = {
 const useStyles = makeStyles({
   root: {
     width: BASE_WIDTH * 15,
-    marginLeft: BASE_WIDTH * 0.2,
   },
   menu: {
     paddingTop: TOP,
+    paddingLeft: BASE_WIDTH * 0.2,
     maxWidth: BASE_WIDTH * 2,
     flexGrow: 1,
+    borderRight: "1px solid #e0e0e0",
   },
   inner: {
     paddingTop: TOP,
+    paddingLeft: BASE_WIDTH * 0.4,
     maxWidth: BASE_WIDTH * 12,
     flexGrow: 1,
   },
@@ -76,7 +78,7 @@ const useStyles = makeStyles({
  */
 export function Entry(): JSX.Element {
   const classes = useStyles();
-
+  const [height, setHeight] = useState(1000);
   const [initialization, dispatchActionToInitialization] = useReducer(
     reducer,
     init
@@ -84,10 +86,17 @@ export function Entry(): JSX.Element {
 
   useEffect(() => {
     let mounted = true;
+
+    window.addEventListener("resize", (event) => {
+      if (mounted) {
+        const target = event.target as Window;
+        setHeight(target.innerHeight);
+      }
+    });
+
     ipcRenderer.on(
       CREATE_BASE_DIRECTORY_SUCCEEDED,
       (_event, message: string) => {
-        console.log(message);
         if (mounted) {
           dispatchActionToInitialization({
             destination: "BASE_DIRECTORY",
@@ -213,7 +222,12 @@ export function Entry(): JSX.Element {
         <Router>
           <div className={classes.root}>
             <Grid container spacing={0}>
-              <Grid item xs={3} className={classes.menu}>
+              <Grid
+                item
+                xs={3}
+                className={classes.menu}
+                style={{ minHeight: height }}
+              >
                 <MenuBar />
               </Grid>
               <Grid item xs={9} className={classes.inner}>

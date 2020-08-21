@@ -20,7 +20,7 @@ export function Entry(): JSX.Element {
   return (
     <div>
       <div>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h4" gutterBottom>
           AtCoder Review
         </Typography>
       </div>

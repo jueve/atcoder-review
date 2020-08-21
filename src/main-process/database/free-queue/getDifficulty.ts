@@ -39,15 +39,12 @@ export const getDifficulty = (
           } else {
             event.returnValue = Math.floor(Math.max(rows[0].difficulty, 0));
           }
-          event.reply(succeeded);
         })
         .catch((_res) => {
           event.returnValue = Number.MIN_SAFE_INTEGER;
-          event.reply(failed);
         });
     } catch (e) {
       event.returnValue = Number.MIN_SAFE_INTEGER;
-      event.reply(failed);
       console.log(e);
     }
   });

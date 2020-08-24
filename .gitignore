@@ -6,6 +6,7 @@ thumbs.db
 dist/
 
 # icon
+icon
 icons
 
 # application directory

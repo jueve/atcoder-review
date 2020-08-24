@@ -19,7 +19,7 @@
     "postinstall": "electron-builder install-app-deps",
     "lint": "eslint --ext .ts,.tsx ./src/**",
     "prettier": "prettier --write ./** --ignore-path .gitignore",
-    "icon": "electron-icon-maker --input=./icon/base.png --output=./"
+    "icon": "electron-icon-maker --input=./images/base.png --output=./"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",

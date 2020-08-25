@@ -5,7 +5,7 @@ import { Entry as Delete } from "../delete/Entry";
 import { Entry as Detail } from "../detail/Entry";
 import { useRouteMatch, Switch, Route } from "react-router-dom";
 
-export function Content() {
+export function Content(): JSX.Element {
   const { url } = useRouteMatch();
   return (
     <>

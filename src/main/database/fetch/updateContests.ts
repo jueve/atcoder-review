@@ -66,7 +66,7 @@ export const updateContests = (
                 .catch((_res) => event.reply(failed));
             });
           })
-          .on("error", (e: any) => {
+          .on("error", (e: Error) => {
             event.reply(failed);
             console.log(e);
           });

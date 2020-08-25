@@ -6,3 +6,5 @@ export interface DatabaseUpdateLog {
   problemModels: LastUpdate;
   userSubmissions: LastUpdate;
 }
+
+export type Result = "SUCCEEDED" | "FAILED";

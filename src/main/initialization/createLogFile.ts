@@ -28,18 +28,7 @@ export const createLogFile = (
   ipcMain.on(begin, async (event) => {
     try {
       if (fs.existsSync(log)) {
-        fs.promises
-          .writeFile(log, "", {
-            encoding: "utf-8",
-            flag: "w",
-          })
-          .then(() => {
-            event.reply(succeeded, message.exists);
-          })
-          .catch((error) => {
-            event.reply(failed, message.failed);
-            console.log(error);
-          });
+        event.reply(succeeded, message.exists);
       } else {
         fs.promises
           .writeFile(log, "", {

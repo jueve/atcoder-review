@@ -3,6 +3,9 @@ import { ipcMain, net } from "electron";
 import { database } from "../../database";
 import { Problem } from "../../../defines/Problem";
 import { v4 } from "uuid";
+import { writeLog } from "../../log/database-operations/writeLog";
+import { createLogFormat } from "../../log/database-operations/createLogFormat";
+import moment from "moment";
 
 type RawProblem = Problem.RawProblem;
 type Problem = Problem.Problem;
@@ -31,6 +34,7 @@ export const updateProblems = (
   failed: UpdateProblems
 ): void => {
   ipcMain.on(begin, (event) => {
+    const date: string = moment().local().format("YYYY-MM-DD HH:mm:ss");
     try {
       const requestForProblems = net.request({
         method: "GET",
@@ -51,7 +55,19 @@ export const updateProblems = (
 
             database(problems)
               .delete()
-              .then((_res) => _res);
+              .then((_res) => {
+                writeLog(
+                  createLogFormat(
+                    date,
+                    "SUCCEEDED",
+                    "Deleted records from 'problems'."
+                  )
+                );
+              })
+              .catch((error: Error) => {
+                event.reply(failed);
+                writeLog(createLogFormat(date, "FAILED", error.message));
+              });
 
             schema.forEach((raw: RawProblem) => {
               database(problems)
@@ -59,22 +75,30 @@ export const updateProblems = (
                 .then((res: Array<number>) => {
                   if (res[0] >= l) {
                     event.reply(succeeded);
+                    createLogFormat(
+                      date,
+                      "SUCCEEDED",
+                      "Inserted records into 'problems'."
+                    );
                   }
                 })
-                .catch((_res) => event.reply(failed));
+                .catch((error: Error) => {
+                  event.reply(failed);
+                  writeLog(createLogFormat(date, "FAILED", error.message));
+                });
             });
           });
       });
 
-      requestForProblems.on("error", (e) => {
+      requestForProblems.on("error", (error: Error) => {
         event.reply(failed);
-        console.log(e);
+        writeLog(createLogFormat(date, "FAILED", error.message));
       });
 
       requestForProblems.end();
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
       event.reply(failed);
+      writeLog(createLogFormat(date, "FAILED", error.message));
     }
   });
 };

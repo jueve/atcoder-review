@@ -4,11 +4,13 @@ import { Set } from "immutable";
 import { database } from "../../database";
 import { UserSubmission } from "../../../defines/UserSubmission";
 import { v4 } from "uuid";
-import moment from "moment";
 import { readFileSync } from "fs";
 import { CONFIG } from "../../constants";
 import { resolvePath } from "../../resolvePath";
 import { Config } from "../../types";
+import { writeLog } from "../../log/database-operations/writeLog";
+import { createLogFormat } from "../../log/database-operations/createLogFormat";
+import moment from "moment";
 
 type RawUserSubmission = UserSubmission.RawUserSubmission;
 type UserSubmission = UserSubmission.UserSubmission;
@@ -68,6 +70,7 @@ export const updateUserSubmissions = (
   failed: UpdateUserSubmissions
 ): void => {
   ipcMain.on(begin, (event) => {
+    const date: string = moment().local().format("YYYY-MM-DD HH:mm:ss");
     try {
       const userId = getUserId();
       const requestForUserSubmission = net.request({
@@ -96,7 +99,19 @@ export const updateUserSubmissions = (
 
             database(userSubmission)
               .delete()
-              .then((resp) => resp);
+              .then((_res) => {
+                writeLog(
+                  createLogFormat(
+                    date,
+                    "SUCCEEDED",
+                    "Deleted records from 'user_submissions'."
+                  )
+                );
+              })
+              .catch((error) => {
+                event.reply(failed);
+                writeLog(createLogFormat(date, "FAILED", error.message));
+              });
 
             schema.forEach((raw: RawUserSubmission) => {
               if (
@@ -121,22 +136,32 @@ export const updateUserSubmissions = (
                 .then((res: Array<number>) => {
                   if (res[0] >= l) {
                     event.reply(succeeded);
+                    writeLog(
+                      createLogFormat(
+                        date,
+                        "SUCCEEDED",
+                        "Inserted records into 'user_submissions'."
+                      )
+                    );
                   }
                 })
-                .catch((_res) => event.reply(failed));
+                .catch((error: Error) => {
+                  event.reply(failed);
+                  writeLog(createLogFormat(date, "FAILED", error.message));
+                });
             });
           });
       });
 
-      requestForUserSubmission.on("error", (e) => {
+      requestForUserSubmission.on("error", (error: Error) => {
         event.reply(failed);
-        console.log(e);
+        writeLog(createLogFormat(date, "FAILED", error.message));
       });
 
       requestForUserSubmission.end();
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
       event.reply(failed);
+      writeLog(createLogFormat(date, "FAILED", error.message));
     }
   });
 };

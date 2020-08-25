@@ -2,6 +2,9 @@ import { TableName } from "../TableName";
 import { ipcMain } from "electron";
 import { database } from "../../database";
 import { Item } from "../../../defines/Item";
+import { writeLog } from "../../log/database-operations/writeLog";
+import { createLogFormat } from "../../log/database-operations/createLogFormat";
+import moment from "moment";
 
 type FQItem = Item.FreeQueueItem;
 type GetAllItems =
@@ -20,18 +23,23 @@ export const getAllItems = (
   failed: GetAllItems
 ): void => {
   ipcMain.on(begin, (event) => {
+    const date: string = moment().local().format("YYYY-MM-DD HH:mm:ss");
     try {
       database(freeQueue)
         .select()
         .then((fqis: Array<FQItem>) => {
           event.reply(succeeded, fqis.reverse());
+          writeLog(
+            createLogFormat(date, "SUCCEEDED", "Got records from 'free_queue'.")
+          );
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           event.reply(failed, []);
+          writeLog(createLogFormat(date, "FAILED", error.message));
         });
     } catch (error) {
       event.reply(failed, []);
-      console.log(error);
+      writeLog(createLogFormat(date, "FAILED", error.message));
     }
   });
 };

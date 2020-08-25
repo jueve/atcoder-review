@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import { ipcMain } from "electron";
-import { Log } from "../types";
 import { resolvePath } from "../resolvePath";
 import { LOG } from "../constants";
 
@@ -20,14 +19,6 @@ const message: Record<string, string> = {
   broken: "The log file was broken, and regenerated new one.",
 };
 
-const init: Log = {
-  error: Array<string>(0),
-};
-
-const propertiesFullFilled = (log: Log): boolean => {
-  return log.error !== undefined;
-};
-
 export const createLogFile = (
   begin: CreateLogFile,
   succeeded: CreateLogFile,
@@ -37,29 +28,10 @@ export const createLogFile = (
   ipcMain.on(begin, async (event) => {
     try {
       if (fs.existsSync(log)) {
-        const data: string = await fs.promises.readFile(log, {
-          encoding: "utf-8",
-        });
-        const schema: Log = JSON.parse(data);
-        if (propertiesFullFilled(schema)) {
-          event.reply(succeeded, message.exists);
-        } else {
-          fs.promises
-            .writeFile(log, JSON.stringify(init), {
-              encoding: "utf-8",
-              flag: "w",
-            })
-            .then(() => {
-              event.reply(succeeded, message.broken);
-            })
-            .catch((error) => {
-              event.reply(failed, message.failed);
-              console.log(error);
-            });
-        }
+        event.reply(succeeded, message.exists);
       } else {
         fs.promises
-          .writeFile(log, JSON.stringify(init), {
+          .writeFile(log, "", {
             encoding: "utf-8",
             flag: "w",
           })

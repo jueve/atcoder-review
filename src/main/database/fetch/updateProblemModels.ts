@@ -3,6 +3,9 @@ import { ipcMain, net } from "electron";
 import { database } from "../../database";
 import { v4 } from "uuid";
 import { ProblemModel } from "../../../defines/ProblemModel";
+import { writeLog } from "../../log/database-operations/writeLog";
+import { createLogFormat } from "../../log/database-operations/createLogFormat";
+import moment from "moment";
 
 type RawProblemModel = ProblemModel.RawProblemModel;
 type ProblemModel = ProblemModel.ProblemModel;
@@ -64,6 +67,7 @@ export const updateProblemModels = (
   failed: UpdateProblemModels
 ): void => {
   ipcMain.on(begin, (event) => {
+    const date: string = moment().local().format("YYYY-MM-DD HH:mm:ss");
     try {
       const requestForProblemModels = net.request({
         method: "GET",
@@ -86,7 +90,19 @@ export const updateProblemModels = (
 
             database(problemModels)
               .delete()
-              .then((resp) => resp);
+              .then((resp) => {
+                writeLog(
+                  createLogFormat(
+                    date,
+                    "SUCCEEDED",
+                    "Deleted records from 'problem_models'."
+                  )
+                );
+              })
+              .catch((error: Error) => {
+                event.reply(failed);
+                writeLog(createLogFormat(date, "FAILED", error.message));
+              });
 
             for (const [key, value] of Object.entries(schema)) {
               database(problemModels)
@@ -94,22 +110,32 @@ export const updateProblemModels = (
                 .then((res: Array<number>) => {
                   if (res[0] >= l) {
                     event.reply(succeeded);
+                    writeLog(
+                      createLogFormat(
+                        date,
+                        "SUCCEEDED",
+                        "Inserted records into 'problem_models'."
+                      )
+                    );
                   }
                 })
-                .catch((_res) => event.reply(failed));
+                .catch((error: Error) => {
+                  event.reply(failed);
+                  writeLog(createLogFormat(date, "FAILED", error.message));
+                });
             }
           });
       });
 
-      requestForProblemModels.on("error", (e) => {
+      requestForProblemModels.on("error", (error: Error) => {
         event.reply(failed);
-        console.log(e);
+        writeLog(createLogFormat(date, "FAILED", error.message));
       });
 
       requestForProblemModels.end();
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
       event.reply(failed);
+      writeLog(createLogFormat(date, "FAILED", error.message));
     }
   });
 };

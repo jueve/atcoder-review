@@ -2,6 +2,9 @@ import { TableName } from "../TableName";
 import { ipcMain } from "electron";
 import { database } from "../../database";
 import { Item } from "../../../defines/Item";
+import { writeLog } from "../../log/database-operations/writeLog";
+import { createLogFormat } from "../../log/database-operations/createLogFormat";
+import moment from "moment";
 
 type UpdateDoneStatus =
   | "UPDATE_DONE_STATUS"
@@ -20,20 +23,28 @@ export const updateDoneStatus = (
   failed: UpdateDoneStatus
 ): void => {
   ipcMain.on(begin, (event, status: boolean, fqi: FreeQueueItem): void => {
+    const date: string = moment().local().format("YYYY-MM-DD HH:mm:ss");
     try {
       database(freeQueue)
         .where({ id: fqi.id })
         .update({ is_done: status })
         .then((_res) => {
           event.reply(succeeded);
+          writeLog(
+            createLogFormat(
+              date,
+              "SUCCEEDED",
+              "Updated a record in 'free_queue'."
+            )
+          );
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           event.reply(failed);
-          console.log(error);
+          writeLog(createLogFormat(date, "FAILED", error.message));
         });
-    } catch (e) {
+    } catch (error) {
       event.reply(failed);
-      console.log(e);
+      writeLog(createLogFormat(date, "FAILED", error.message));
     }
   });
 };

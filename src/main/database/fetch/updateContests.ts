@@ -3,6 +3,9 @@ import { ipcMain, net } from "electron";
 import { database } from "../../database";
 import { Contest } from "../../../defines/Contest";
 import { v4 } from "uuid";
+import { writeLog } from "../../log/database-operations/writeLog";
+import { createLogFormat } from "../../log/database-operations/createLogFormat";
+import moment from "moment";
 
 type RawContest = Contest.RawContest;
 type Contest = Contest.Contest;
@@ -33,6 +36,7 @@ export const updateContests = (
   failed: UpdateContests
 ): void => {
   ipcMain.on(begin, (event) => {
+    const date: string = moment().local().format("YYYY-MM-DD HH:mm:ss");
     try {
       const requestForContests = net.request({
         method: "GET",
@@ -53,7 +57,19 @@ export const updateContests = (
 
             database(contests)
               .delete()
-              .then((_res) => _res);
+              .then((_res) => {
+                writeLog(
+                  createLogFormat(
+                    date,
+                    "SUCCEEDED",
+                    "Deleted records from 'contests'."
+                  )
+                );
+              })
+              .catch((error: Error) => {
+                event.reply(failed);
+                writeLog(createLogFormat(date, "FAILED", error.message));
+              });
 
             schema.forEach((raw: RawContest) => {
               database(contests)
@@ -61,25 +77,36 @@ export const updateContests = (
                 .then((res: Array<number>) => {
                   if (res[0] >= l) {
                     event.reply(succeeded);
+                    writeLog(
+                      createLogFormat(
+                        date,
+                        "SUCCEEDED",
+                        "Inserted records into 'contests'."
+                      )
+                    );
                   }
                 })
-                .catch((_res) => event.reply(failed));
+                .catch((error: Error) => {
+                  event.reply(failed);
+                  writeLog(createLogFormat(date, "FAILED", error.message));
+                });
             });
           })
-          .on("error", (e: Error) => {
+          .on("error", (error: Error) => {
             event.reply(failed);
-            console.log(e);
+            writeLog(createLogFormat(date, "FAILED", error.message));
           });
       });
 
-      requestForContests.on("error", (e) => {
+      requestForContests.on("error", (error: Error) => {
         event.reply(failed);
-        console.log(e);
+        writeLog(createLogFormat(date, "FAILED", error.message));
       });
 
       requestForContests.end();
-    } catch (e) {
+    } catch (error) {
       event.reply(failed);
+      writeLog(createLogFormat(date, "FAILED", error.message));
     }
   });
 };

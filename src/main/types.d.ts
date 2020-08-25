@@ -28,7 +28,3 @@ export interface DatabaseUpdateLog {
   problemModels: number | null;
   userSubmissions: number | null;
 }
-
-export interface Log {
-  error: Array<string>;
-}

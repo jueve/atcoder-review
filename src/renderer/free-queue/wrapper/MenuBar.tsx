@@ -5,7 +5,7 @@ import { Context as FreeQueueContext } from "./Context";
 import { menuBarReducer } from "./menuBarReducer";
 import { Page } from "./types";
 
-export function MenuBar() {
+export function MenuBar(): JSX.Element {
   const { items } = useContext(FreeQueueContext);
   const { url } = useRouteMatch();
   const [menuBarDisable, dispatchToMenuBarDisable] = useReducer(

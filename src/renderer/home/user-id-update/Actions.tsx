@@ -19,10 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-/**
- *
- */
-export function Actions() {
+export function Actions(): JSX.Element {
   const classes = useStyles();
   const { userId, updateUserId } = useContext(UpdateUserIdContext);
   const history = useHistory();

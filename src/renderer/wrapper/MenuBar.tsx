@@ -4,10 +4,7 @@ import { Link } from "react-router-dom";
 import { menuBarReducer } from "./menuBarReducer";
 import { Page } from "./types";
 
-/**
- *
- */
-export function MenuBar() {
+export function MenuBar(): JSX.Element {
   const [menuBarDisable, dispatchToMenuBarDisable] = useReducer(
     menuBarReducer,
     {

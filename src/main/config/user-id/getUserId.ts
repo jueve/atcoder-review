@@ -15,7 +15,7 @@ export const getUserId = (
   failed: GetUserId
 ): void => {
   ipcMain.on(begin, (event) => {
-    const init: any = null;
+    const init = null;
     const config = resolvePath(CONFIG);
     try {
       if (fs.existsSync(config)) {

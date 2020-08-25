@@ -4,6 +4,9 @@ import { database } from "../../database";
 import { Contest } from "../../../defines/Contest";
 import { Problem } from "../../../defines/Problem";
 import { Candidate } from "../../../defines/Candidate";
+import { writeLog } from "../../log/database-operations/writeLog";
+import { createLogFormat } from "../../log/database-operations/createLogFormat";
+import moment from "moment";
 
 type Contest = Contest.Contest;
 type Problem = Problem.Problem;
@@ -26,6 +29,7 @@ export const getAllCandidates = (
   failed: GetAllCandidates
 ): void => {
   ipcMain.on(begin, (event) => {
+    const date: string = moment().local().format("YYYY-MM-DD HH:mm:ss");
     try {
       database(problems)
         .select()
@@ -53,19 +57,26 @@ export const getAllCandidates = (
               });
 
               event.reply(succeeded, fqcs);
+              writeLog(
+                createLogFormat(
+                  date,
+                  "SUCCEEDED",
+                  "Got records from 'contests'."
+                )
+              );
             })
-            .catch((_res) => {
-              console.log(_res);
+            .catch((error: Error) => {
+              writeLog(createLogFormat(date, "FAILED", error.message));
               event.reply(failed, []);
             });
         })
-        .catch((_res) => {
-          console.log(_res);
+        .catch((error: Error) => {
           event.reply(failed, []);
+          writeLog(createLogFormat(date, "FAILED", error.message));
         });
-    } catch (e) {
+    } catch (error) {
       event.reply(failed, []);
-      console.log(e);
+      writeLog(createLogFormat(date, "FAILED", error.message));
     }
   });
 };

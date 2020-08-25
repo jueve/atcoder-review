@@ -2,6 +2,9 @@ import { TableName } from "../TableName";
 import { ipcMain } from "electron";
 import { database } from "../../database";
 import { Candidate } from "../../../defines/Candidate";
+import { writeLog } from "../../log/database-operations/writeLog";
+import { createLogFormat } from "../../log/database-operations/createLogFormat";
+import moment from "moment";
 
 interface ExperimentalStatus {
   is_experimental: boolean | undefined | null;
@@ -25,6 +28,7 @@ export const getExperimentalStatus = (
   failed: GetExperimentalStatus
 ): void => {
   ipcMain.on(begin, (event, fqc: FreeQueueCandidate) => {
+    const date: string = moment().local().format("YYYY-MM-DD HH:mm:ss");
     try {
       database(problemModels)
         .select("is_experimental")
@@ -37,16 +41,29 @@ export const getExperimentalStatus = (
             rows[0].is_experimental === null
           ) {
             event.returnValue = false;
+            createLogFormat(
+              date,
+              "SUCCEEDED",
+              "Experimental status not found from 'problem_models', and returned dummy value."
+            );
           } else {
             event.returnValue = rows[0].is_experimental;
+            writeLog(
+              createLogFormat(
+                date,
+                "SUCCEEDED",
+                "Got a record from 'problem_models'."
+              )
+            );
           }
         })
-        .catch((_res) => {
+        .catch((error: Error) => {
           event.returnValue = false;
+          writeLog(createLogFormat(date, "FAILED", error.message));
         });
-    } catch (e) {
+    } catch (error) {
       event.returnValue = false;
-      console.log(e);
+      writeLog(createLogFormat(date, "FAILED", error.message));
     }
   });
 };

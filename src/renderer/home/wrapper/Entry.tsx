@@ -23,6 +23,9 @@ export function Entry(): JSX.Element {
         <Typography variant="h4" gutterBottom>
           AtCoder Review
         </Typography>
+        <Typography variant="body2" color="textSecondary" gutterBottom>
+          version 0.0.1
+        </Typography>
       </div>
       <div className={classes.content}>
         <Grid container>

@@ -79,6 +79,7 @@ export function Entry(): JSX.Element {
     ipcRenderer.on(GET_ALL_ITEMS_SUCCEEDED, (_, fqis) => {
       if (mounted) {
         setItems(fqis);
+        setPage(1);
         setPageLength(getPageLength(fqis, itemsPerPage));
         setToShow(getItemsToShow(1, itemsPerPage, fqis));
       }
@@ -87,6 +88,7 @@ export function Entry(): JSX.Element {
     ipcRenderer.on(GET_ALL_ITEMS_FAILED, (_, fqis) => {
       if (mounted) {
         setItems(fqis);
+        setPage(1);
         setPageLength(getPageLength(fqis, itemsPerPage));
         setToShow(getItemsToShow(1, itemsPerPage, fqis));
       }

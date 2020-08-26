@@ -96,7 +96,10 @@
       ]
     },
     "linux": {
-      "icon": "./icons/png"
+      "icon": "./icons/png",
+      "target": [
+        "deb"
+     ]
     },
     "mac": {
       "category": "Productivity",

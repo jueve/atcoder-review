@@ -41,7 +41,7 @@ yarn dist:linux
 `dist`ディレクトリに以下の拡張子でファイルが生成されます。
 - windows: `.msi`
 - mac `.dmg`
-- linux: `.AppImage`
+- linux: `.deb`
 
 ## localhost上で実行する
 ```

@@ -21,7 +21,7 @@ export function Entry(): JSX.Element {
     <div>
       <div>
         <Typography variant="h6" gutterBottom>
-          Set up
+          Update
         </Typography>
         <List>
           <ListItem
@@ -29,7 +29,7 @@ export function Entry(): JSX.Element {
             to="/update-user-id"
             onClick={handleLinkToUpdateUserIdClick}
           >
-            <ListItemText primary="Update user id" />
+            <ListItemText primary="User id" />
           </ListItem>
 
           <ListItem
@@ -37,7 +37,7 @@ export function Entry(): JSX.Element {
             to="/update-database"
             onClick={handleLinkToDatabaseUpdateClick}
           >
-            <ListItemText primary="Update database" />
+            <ListItemText primary="Database" />
           </ListItem>
         </List>
       </div>

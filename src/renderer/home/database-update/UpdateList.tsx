@@ -1,16 +1,28 @@
 import React, { useContext } from "react";
 import {
   Button,
+  CircularProgress,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   Tooltip,
+  makeStyles,
+  createStyles,
+  Theme,
 } from "@material-ui/core";
 import { Done, Report, Update } from "@material-ui/icons";
 import { Context as DatabaseUpdateContext } from "./Context";
 import { LastUpdate, UpdateStatus } from "./types";
 import moment from "moment";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    progress: {
+      marginRight: theme.spacing(3),
+    },
+  })
+);
 
 const Icon = (status: UpdateStatus): JSX.Element => {
   switch (status.progress) {
@@ -45,6 +57,7 @@ const Icon = (status: UpdateStatus): JSX.Element => {
  *
  */
 export function UpdateList(): JSX.Element {
+  const classes = useStyles();
   const {
     databaseUpdate,
     updateContests,
@@ -75,14 +88,15 @@ export function UpdateList(): JSX.Element {
             databaseUpdate.contests.lastUpdate
           )}`}
         />
-        <Button
-          variant="outlined"
-          color="primary"
-          disabled={databaseUpdate.contests.progress === "UPDATING"}
-          onClick={updateContests}
-        >
-          UPDATE
-        </Button>
+        {databaseUpdate.contests.progress === "UPDATING" ? (
+          <div className={classes.progress}>
+            <CircularProgress color="primary" />
+          </div>
+        ) : (
+          <Button variant="outlined" color="primary" onClick={updateContests}>
+            UPDATE
+          </Button>
+        )}
       </ListItem>
 
       <ListItem>
@@ -95,14 +109,15 @@ export function UpdateList(): JSX.Element {
             databaseUpdate.problems.lastUpdate
           )}`}
         />
-        <Button
-          variant="outlined"
-          color="primary"
-          disabled={databaseUpdate.problems.progress === "UPDATING"}
-          onClick={updateProblems}
-        >
-          UPDATE
-        </Button>
+        {databaseUpdate.problems.progress === "UPDATING" ? (
+          <div className={classes.progress}>
+            <CircularProgress color="primary" />
+          </div>
+        ) : (
+          <Button variant="outlined" color="primary" onClick={updateProblems}>
+            UPDATE
+          </Button>
+        )}
       </ListItem>
 
       <ListItem>
@@ -115,14 +130,19 @@ export function UpdateList(): JSX.Element {
             databaseUpdate.problemModels.lastUpdate
           )}`}
         />
-        <Button
-          variant="outlined"
-          color="primary"
-          disabled={databaseUpdate.problemModels.progress === "UPDATING"}
-          onClick={updateProblemModels}
-        >
-          UPDATE
-        </Button>
+        {databaseUpdate.problemModels.progress === "UPDATING" ? (
+          <div className={classes.progress}>
+            <CircularProgress color="primary" />
+          </div>
+        ) : (
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={updateProblemModels}
+          >
+            UPDATE
+          </Button>
+        )}
       </ListItem>
 
       <ListItem>
@@ -135,14 +155,19 @@ export function UpdateList(): JSX.Element {
             databaseUpdate.userSubmissions.lastUpdate
           )}`}
         />
-        <Button
-          variant="outlined"
-          color="primary"
-          disabled={databaseUpdate.userSubmissions.progress === "UPDATING"}
-          onClick={updateUserSubmissions}
-        >
-          UPDATE
-        </Button>
+        {databaseUpdate.userSubmissions.progress === "UPDATING" ? (
+          <div className={classes.progress}>
+            <CircularProgress color="primary" />
+          </div>
+        ) : (
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={updateUserSubmissions}
+          >
+            UPDATE
+          </Button>
+        )}
       </ListItem>
     </List>
   );

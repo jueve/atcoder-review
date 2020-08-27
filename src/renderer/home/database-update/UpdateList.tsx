@@ -70,9 +70,7 @@ export function UpdateList(): JSX.Element {
     if (updateEpochSecond === null) {
       return "?";
     } else {
-      return moment(updateEpochSecond * 1000)
-        .local()
-        .format("YYYY-MM-DD HH:mm");
+      return moment.unix(updateEpochSecond).local().format("YYYY-MM-DD");
     }
   };
 

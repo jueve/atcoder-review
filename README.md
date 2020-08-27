@@ -1,4 +1,6 @@
 # AtCoder Review
+![sample](./images/sample.png)
+
 AtCoder Reviewは競技プログラミングサイト[AtCoder](https://atcoder.jp/) の問題の復習に焦点を置いたクロスプラットフォームのデスクトップアプリケーションです。
 Electron、SQLite、AtCoder ProblemsのAPIを利用しています。
 
@@ -11,6 +13,7 @@ Electron、SQLite、AtCoder ProblemsのAPIを利用しています。
 
 
 ## ユーザー名とデータベースの更新
+![home](./images/home.png)
 アプリを立ち上げた後、ホーム画面の右側にある「Update」からユーザー名とのローカルデータベースのアップデートを行います。
 
 ### ユーザー名の更新
@@ -29,7 +32,7 @@ AtCoder ProblemsのAPIから個人提出の記録を取得する際に使われ�
 3. 更新のアニメーションが全て止まれば完了です
 
 (表示された4つの項目は上から「コンテスト情報」、「問題の情報」、「問題の詳細(難易度等)」、「ユーザーの提出記録」ですが、  
-慣れないうちは「UPDATE ALL」を押して4つとも同時に更新して大丈夫です。)
+慣れないうちは「UPDATE ALL」を押して4つとも同時に更新してください。)
 
 現在自動更新の機能がなく、手動での操作が必要です。  
  

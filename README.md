@@ -1,8 +1,9 @@
 # AtCoder Review
-![sample](./images/sample.png)
-
 AtCoder Reviewは競技プログラミングサイト[AtCoder](https://atcoder.jp/) の問題の復習に焦点を置いたクロスプラットフォームのデスクトップアプリケーションです。
-Electron、SQLite、AtCoder ProblemsのAPIを利用しています。
+
+[Electron](https://www.electronjs.org/) 、[SQLite](https://www.sqlite.org/index.html) 、[AtCoder Problems](https://kenkoooo.com/atcoder/) のAPIを利用しています。
+
+<img src="./images/sample.png" width="960px" alt="sample">
 
 ## インストーラーや実行ファイル
 ### WindowsとLinux
@@ -13,7 +14,8 @@ Electron、SQLite、AtCoder ProblemsのAPIを利用しています。
 
 
 ## ユーザー名とデータベースの更新
-![home](./images/home.png)
+<img src="./images/home.png" width="960px" alt="home">
+
 アプリを立ち上げた後、ホーム画面の右側にある「Update」からユーザー名とのローカルデータベースのアップデートを行います。
 
 ### ユーザー名の更新

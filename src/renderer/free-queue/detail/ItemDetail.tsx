@@ -61,7 +61,7 @@ export function ItemDetail(): JSX.Element {
   };
 
   const showLocalTime = (startEpochSecond: number): string => {
-    return moment.unix(startEpochSecond).local().format("YYYY-MM-DD");
+    return moment.unix(startEpochSecond).local().format("YYYY-MM-DD HH:mm");
   };
 
   const handleLinkClick = (fqi: FQItem): void => {

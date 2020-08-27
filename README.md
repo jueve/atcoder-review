@@ -5,6 +5,9 @@ AtCoder Reviewは競技プログラミングサイト[AtCoder](https://atcoder.j
 
 <img src="./images/sample.png" width="960px" alt="sample">
 
+## バージョン
+v0.0.1
+
 ## インストーラーや実行ファイル
 ### WindowsとLinux
 [releases](https://github.com/jueve/atcoder-review/releases) を参照してください。
